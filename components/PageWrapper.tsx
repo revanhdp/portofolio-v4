@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { linkSound } from "@/lib/sound";
 
 interface PageWrapperProps {
   children: React.ReactNode;
@@ -18,6 +19,7 @@ export default function PageWrapper({
       style={{
         minHeight: "100vh",
         backgroundColor: "var(--background)",
+        transition: "background-color 0.2s ease, color 0.2s ease",
       }}
     >
       {/* Exact arikko.dev container: max-w-[40rem]=640px, padding 80px top/bottom, 24px sides */}
@@ -40,6 +42,7 @@ export default function PageWrapper({
           >
             <Link
               href="/"
+              {...linkSound}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -48,7 +51,7 @@ export default function PageWrapper({
                 color: "var(--muted)",
                 textDecoration: "none",
               }}
-              className="hover:text-zinc-900 transition-colors"
+              className="hover-foreground"
             >
               <ArrowLeft size={12} strokeWidth={1.75} />
               <span>Index</span>

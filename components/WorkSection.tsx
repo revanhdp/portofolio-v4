@@ -2,21 +2,33 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
+import Link from "next/link";
 import { works } from "@/lib/data";
+import { linkSound, playCollapse, playExpand, playHover } from "@/lib/sound";
+import WorkProjectRow from "@/components/WorkProjectRow";
+
+// The home list stays a preview — the rest lives on /work.
+const PREVIEW_COUNT = 3;
 
 interface WorkItemProps {
   work: (typeof works)[0];
-  index: number;
 }
 
-function WorkItem({ work, index }: WorkItemProps) {
+function WorkItem({ work }: WorkItemProps) {
   const [expanded, setExpanded] = useState(false);
+
+  const toggle = () => {
+    if (expanded) playCollapse();
+    else playExpand();
+    setExpanded(!expanded);
+  };
 
   return (
     <div>
       <button
-        onClick={() => setExpanded(!expanded)}
+        onClick={toggle}
+        onMouseEnter={playHover}
         aria-expanded={expanded}
         style={{
           width: "100%",
@@ -58,10 +70,10 @@ function WorkItem({ work, index }: WorkItemProps) {
 
         {/* Company name + period */}
         <div style={{ flex: 1, display: "flex", alignItems: "center", gap: "8px" }}>
-          <span style={{ fontSize: "14px", fontWeight: 500 }}>
+          <span style={{ fontSize: "15px", fontWeight: 500 }}>
             {work.company}
           </span>
-          <span style={{ fontSize: "13px", color: "var(--muted)" }}>
+          <span style={{ fontSize: "14px", color: "var(--muted)" }}>
             {work.period}
           </span>
         </div>
@@ -87,39 +99,17 @@ function WorkItem({ work, index }: WorkItemProps) {
             transition={{ duration: 0.22, ease: "easeInOut" }}
             style={{ overflow: "hidden" }}
           >
-            <div style={{ borderBottom: "1px solid var(--border)" }}>
-              {work.projects.map((project, i) => (
-                <div
-                  key={project.name}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "8px 0 8px 36px",
-                    borderBottom:
-                      i < work.projects.length - 1
-                        ? "1px solid var(--border)"
-                        : "none",
-                    gap: "16px",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ fontSize: "13px" }}>{project.icon}</span>
-                    <span style={{ fontSize: "13px", fontWeight: 500 }}>
-                      {project.name}
-                    </span>
-                  </div>
-                  <span
-                    style={{
-                      fontSize: "13px",
-                      color: "var(--muted)",
-                      flexShrink: 0,
-                      textAlign: "right",
-                    }}
-                  >
-                    {project.description}
-                  </span>
-                </div>
+            {/* Sub-items share the row's left edge — the icon sits in the
+                same 26px column as the company badge, so the names line up
+                with the company name. No indent, no inner hairlines. */}
+            <div
+              style={{
+                borderBottom: "1px solid var(--border)",
+                paddingBottom: "6px",
+              }}
+            >
+              {work.projects.map((project) => (
+                <WorkProjectRow key={project.name} project={project} />
               ))}
             </div>
           </motion.div>
@@ -132,18 +122,37 @@ function WorkItem({ work, index }: WorkItemProps) {
 export default function WorkSection() {
   return (
     <section>
-      <p
+      {/* Label row doubles as the entry point to the full history */}
+      <div
         style={{
-          fontSize: "14px",
-          color: "var(--muted)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "12px",
           marginBottom: "8px",
         }}
       >
-        Work
-      </p>
+        <p style={{ fontSize: "14px", color: "var(--muted)" }}>Work</p>
+        <Link
+          href="/work"
+          {...linkSound}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "5px",
+            fontSize: "13px",
+            color: "var(--muted)",
+            textDecoration: "none",
+          }}
+          className="hover-foreground"
+        >
+          <span>All work</span>
+          <ArrowRight size={12} strokeWidth={1.75} />
+        </Link>
+      </div>
       <div>
-        {works.map((work, index) => (
-          <WorkItem key={work.id} work={work} index={index} />
+        {works.slice(0, PREVIEW_COUNT).map((work) => (
+          <WorkItem key={work.id} work={work} />
         ))}
       </div>
     </section>

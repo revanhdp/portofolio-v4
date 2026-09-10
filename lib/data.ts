@@ -1,3 +1,29 @@
+/* "Hello" in a handful of languages, cycled by the typewriter greeting.
+   Kept short and left-to-right: the greeting animates character by
+   character, which breaks the contextual joining of RTL scripts.       */
+export const greetings = [
+  "Howdy",
+  "Hello",
+  "Halo",
+  "Hola",
+  "Salut",
+  "Ciao",
+  "Olá",
+  "Hej",
+  "Privet",
+  "你好",
+  "안녕",
+] as const;
+
+export type WorkIcon =
+  | "ship"
+  | "megaphone"
+  | "building"
+  | "code"
+  | "graduation"
+  | "layout"
+  | "globe";
+
 export type WorkExperience = {
   id: string;
   company: string;
@@ -6,7 +32,7 @@ export type WorkExperience = {
   period: string;
   role: string;
   projects: {
-    icon: string;
+    icon: WorkIcon;
     name: string;
     description: string;
   }[];
@@ -30,44 +56,74 @@ export type Project = {
   archived?: boolean;
 };
 
+export type StackCategory = {
+  id: string;
+  label: string;
+  icon: "frontend" | "backend" | "database" | "tooling";
+  items: {
+    name: string;
+    note: string;
+  }[];
+};
+
 export const works: WorkExperience[] = [
   {
-    id: "goto",
-    company: "GoTo Group",
-    logo: "G",
-    logoColor: "#00AA5B",
+    id: "abhipraya",
+    company: "Abhipraya",
+    logo: "A",
+    logoColor: "#2563eb",
     period: "2024 – Present",
-    role: "Senior Software Engineer",
+    role: "Software Engineer / Web Developer",
     projects: [
       {
-        icon: "🛒",
-        name: "GoPay Merchant Platform",
-        description: "Payment gateway dashboard for millions of merchants",
+        icon: "ship",
+        name: "eManifest (Kemenhub)",
+        description: "Sistem manifest digital Kemenhub RI",
       },
       {
-        icon: "📊",
-        name: "Analytics Dashboard",
-        description: "Real-time transaction analytics and reporting",
+        icon: "megaphone",
+        name: "eKompu (Kemen PUPR)",
+        description: "Portal biro komunikasi publik Kementerian PUPR",
+      },
+      {
+        icon: "building",
+        name: "PKP HUB (Kemen PKP)",
+        description: "Platform portal perumahan & kawasan permukiman",
       },
     ],
   },
   {
-    id: "tokopedia",
-    company: "Tokopedia",
-    logo: "T",
-    logoColor: "#42b549",
-    period: "2021 – 2024",
-    role: "Software Engineer",
+    id: "studi-independen-2",
+    company: "Studi Independen (Batch 2)",
+    logo: "S",
+    logoColor: "#6366f1",
+    period: "2023 – 2024",
+    role: "Full-Stack Web Development Fellow",
     projects: [
       {
-        icon: "🏪",
-        name: "Seller Center Revamp",
-        description: "Complete UI/UX overhaul for seller management portal",
+        icon: "code",
+        name: "Advanced Web Engineering",
+        description: "Full-stack development, API design, and system architecture",
       },
       {
-        icon: "🔍",
-        name: "Search Infrastructure",
-        description: "Improved search ranking and indexing pipeline",
+        icon: "graduation",
+        name: "Capstone Project",
+        description: "End-to-end collaborative production-ready web application",
+      },
+    ],
+  },
+  {
+    id: "studi-independen-1",
+    company: "Studi Independen (Batch 1)",
+    logo: "S",
+    logoColor: "#8b5cf6",
+    period: "2023",
+    role: "Frontend Engineering Fellow",
+    projects: [
+      {
+        icon: "layout",
+        name: "Modern Frontend & UI/UX",
+        description: "Responsive web apps, state management, and modern JavaScript",
       },
     ],
   },
@@ -75,15 +131,63 @@ export const works: WorkExperience[] = [
     id: "freelance",
     company: "Freelance",
     logo: "F",
-    logoColor: "#6366f1",
-    period: "2018 – 2021",
-    role: "Full-Stack Developer",
+    logoColor: "#0ea5e9",
+    period: "2022 – 2023",
+    role: "Web Developer",
     projects: [
       {
-        icon: "🌐",
-        name: "E-commerce Platforms",
-        description: "Built multiple online stores for local businesses",
+        icon: "globe",
+        name: "Client Web Platforms",
+        description: "Custom websites and web applications for local clients",
       },
+    ],
+  },
+];
+
+export const stack: StackCategory[] = [
+  {
+    id: "frontend",
+    label: "Frontend",
+    icon: "frontend",
+    items: [
+      { name: "TypeScript", note: "Type-safe by default" },
+      { name: "React", note: "Component-driven interfaces" },
+      { name: "Next.js", note: "App Router, SSR & RSC" },
+      { name: "Tailwind CSS", note: "Utility-first styling" },
+      { name: "Framer Motion", note: "Interface motion & transitions" },
+    ],
+  },
+  {
+    id: "backend",
+    label: "Backend",
+    icon: "backend",
+    items: [
+      { name: "Node.js", note: "Services & API layers" },
+      { name: "Laravel", note: "PHP apps & enterprise portals" },
+      { name: "Express", note: "Lightweight REST routing" },
+      { name: "REST API", note: "Contract-first design" },
+    ],
+  },
+  {
+    id: "database",
+    label: "Database",
+    icon: "database",
+    items: [
+      { name: "PostgreSQL", note: "Primary relational store" },
+      { name: "MySQL", note: "Legacy & government systems" },
+      { name: "Prisma", note: "Type-safe data access" },
+      { name: "Redis", note: "Caching & background queues" },
+    ],
+  },
+  {
+    id: "tooling",
+    label: "Tooling",
+    icon: "tooling",
+    items: [
+      { name: "Git", note: "Trunk-based workflow" },
+      { name: "Docker", note: "Reproducible environments" },
+      { name: "Vercel", note: "Preview & production deploys" },
+      { name: "Figma", note: "Design handoff" },
     ],
   },
 ];
@@ -360,6 +464,21 @@ Don't guess — measure. Tools:
 ];
 
 export const projects: Project[] = [
+  {
+    id: "emanifest",
+    name: "eManifest (Kemenhub)",
+    description: "Sistem manifest digital terintegrasi untuk Kementerian Perhubungan RI",
+  },
+  {
+    id: "ekompu",
+    name: "eKompu (Kemen PUPR)",
+    description: "Portal layanan biro komunikasi publik terintegrasi Kementerian PUPR",
+  },
+  {
+    id: "pkp-hub",
+    name: "PKP HUB (Kemen PKP)",
+    description: "Platform portal perumahan dan kawasan permukiman terpadu",
+  },
   {
     id: "kanban-flow",
     name: "KanbanFlow",

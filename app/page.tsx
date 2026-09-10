@@ -2,10 +2,13 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import VictoryHand from "@/components/VictoryHand";
+import Greeting from "@/components/Greeting";
 import PageWrapper from "@/components/PageWrapper";
 import WorkSection from "@/components/WorkSection";
 import SoundToggle from "@/components/SoundToggle";
 import { InlineExpand } from "@/components/InlineExpand";
+import { linkSound } from "@/lib/sound";
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 8 },
@@ -16,26 +19,28 @@ const fadeUp = (delay = 0) => ({
 export default function HomePage() {
   return (
     <PageWrapper>
-      {/* ✌️ Emoji */}
-      <motion.div {...fadeUp(0)} style={{ fontSize: "22px", marginBottom: "16px" }}>
-        ✌️
+      {/* Victory Hand interactive SVG */}
+      <motion.div {...fadeUp(0)}>
+        <VictoryHand />
       </motion.div>
 
       {/* Name block */}
       <motion.div {...fadeUp(0.06)} style={{ marginBottom: "20px" }}>
-        <p
+        <h1
           style={{
-            fontSize: "15px",
+            fontSize: "16px",
             fontWeight: 500,
             color: "var(--foreground)",
             lineHeight: 1.4,
+            marginTop: "12px",
+            marginBottom: "2px",
           }}
         >
-          Howdy, I&apos;m Revanza Hadi Putra.
-        </p>
+          <Greeting />
+        </h1>
         <p
           style={{
-            fontSize: "15px",
+            fontSize: "16px",
             color: "var(--muted)",
             lineHeight: 1.4,
           }}
@@ -51,10 +56,10 @@ export default function HomePage() {
           display: "flex",
           flexDirection: "column",
           gap: "12px",
-          fontSize: "15px",
+          fontSize: "16px",
           lineHeight: 1.625,
           color: "var(--foreground)",
-          marginBottom: "20px",
+          marginBottom: "28px",
         }}
       >
         <p>
@@ -73,42 +78,24 @@ export default function HomePage() {
         </p>
         <p>
           Currently engineering at{" "}
-          <a
-            href="https://gotogroup.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="link"
-          >
-            GoTo Group ↗
-          </a>{" "}
+          <span style={{ fontWeight: 500, color: "var(--foreground)" }}>
+            Abhipraya
+          </span>{" "}
           <InlineExpand
             summary="(more)"
             detail={
               <>
-                (Southeast Asia&apos;s largest tech company, powering Gojek,
-                Tokopedia, and GoPay with billions of transactions annually).{" "}
+                (a digital software agency specializing in web development,
+                enterprise portals, and tailored digital solutions).{" "}
               </>
             }
           />
-          . Previously built{" "}
-          <a
-            href="https://tokopedia.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="link"
-          >
-            Tokopedia ↗
-          </a>{" "}
-          <InlineExpand
-            summary="(more)"
-            detail={
-              <>
-                (Indonesia&apos;s largest e-commerce with 100M+ users and
-                millions of sellers across the archipelago).{" "}
-              </>
-            }
-          />
-          .
+          , where I build impactful platforms including{" "}
+          <span style={{ fontWeight: 500 }}>eManifest</span> (Kemenhub),{" "}
+          <span style={{ fontWeight: 500 }}>eKompu</span> (Kemen PUPR), and{" "}
+          <span style={{ fontWeight: 500 }}>PKP HUB</span> (Kemen PKP).
+          Previously completed two certified independent study (Studi
+          Independen) programs in modern web software engineering.
         </p>
       </motion.div>
 
@@ -125,22 +112,30 @@ export default function HomePage() {
           display: "flex",
           flexDirection: "column",
           gap: "8px",
-          fontSize: "15px",
+          fontSize: "16px",
           lineHeight: 1.625,
           color: "var(--foreground)",
         }}
       >
         <p>
           Read my{" "}
-          <Link href="/writings" className="link">
+          <Link href="/writings" className="link" {...linkSound}>
             writings
           </Link>
-          , or browse the{" "}
-          <Link href="/projects" className="link">
+          , browse the{" "}
+          <Link href="/projects" className="link" {...linkSound}>
             projects
           </Link>{" "}
-          I&apos;ve built. Wanna discuss a project or just say hi?{" "}
-          <a href="mailto:revanzahadiputra2@gmail.com" className="link">
+          I&apos;ve built, or see the{" "}
+          <Link href="/stack" className="link" {...linkSound}>
+            stack
+          </Link>{" "}
+          I build with. Wanna discuss a project or just say hi?{" "}
+          <a
+            href="mailto:revanzahadiputra2@gmail.com"
+            className="link"
+            {...linkSound}
+          >
             Let&apos;s grab a coffee
           </a>
         </p>
@@ -151,6 +146,7 @@ export default function HomePage() {
             target="_blank"
             rel="noopener noreferrer"
             className="link"
+            {...linkSound}
           >
             X
           </a>
@@ -160,6 +156,7 @@ export default function HomePage() {
             target="_blank"
             rel="noopener noreferrer"
             className="link"
+            {...linkSound}
           >
             GitHub
           </a>
@@ -169,11 +166,16 @@ export default function HomePage() {
             target="_blank"
             rel="noopener noreferrer"
             className="link"
+            {...linkSound}
           >
             LinkedIn
           </a>
           , or reach me via{" "}
-          <a href="mailto:revanzahadiputra2@gmail.com" className="link">
+          <a
+            href="mailto:revanzahadiputra2@gmail.com"
+            className="link"
+            {...linkSound}
+          >
             email
           </a>
           .

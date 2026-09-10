@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { playClick, playHover } from "@/lib/sound";
 
 interface InlineExpandProps {
   summary: React.ReactNode;
@@ -10,7 +11,10 @@ interface InlineExpandProps {
 
 export function InlineExpand({ summary, detail }: InlineExpandProps) {
   const [expanded, setExpanded] = useState(false);
-  const toggle = useCallback(() => setExpanded((v) => !v), []);
+  const toggle = useCallback(() => {
+    playClick();
+    setExpanded((v) => !v);
+  }, []);
 
   if (expanded) {
     return (
@@ -23,7 +27,11 @@ export function InlineExpand({ summary, detail }: InlineExpandProps) {
           style={{ display: "inline" }}
         >
           {detail}
-          <button onClick={toggle} className="link-dotted">
+          <button
+            onClick={toggle}
+            onMouseEnter={playHover}
+            className="link-dotted"
+          >
             (less)
           </button>
         </motion.span>
@@ -32,7 +40,7 @@ export function InlineExpand({ summary, detail }: InlineExpandProps) {
   }
 
   return (
-    <button onClick={toggle} className="link-dotted">
+    <button onClick={toggle} onMouseEnter={playHover} className="link-dotted">
       {summary}
     </button>
   );

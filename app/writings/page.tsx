@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import PageWrapper from "@/components/PageWrapper";
 import { writings } from "@/lib/data";
+import { linkSound } from "@/lib/sound";
 
 export default function WritingsPage() {
   return (
@@ -42,6 +43,7 @@ export default function WritingsPage() {
             <Link
               href={`/writings/${writing.slug}`}
               id={`writing-${writing.slug}`}
+              {...linkSound}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -61,7 +63,7 @@ export default function WritingsPage() {
                   color: "var(--foreground)",
                   transition: "color 0.15s",
                 }}
-                className="group-hover:text-zinc-500"
+                className="group-hover:opacity-60 transition-opacity"
               >
                 {writing.title}
               </span>

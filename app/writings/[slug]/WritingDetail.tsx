@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import PageWrapper from "@/components/PageWrapper";
 import { Writing } from "@/lib/data";
+import { linkSound } from "@/lib/sound";
 
 interface Props {
   writing: Writing;
@@ -115,7 +116,13 @@ export default function WritingDetail({ writing }: Props) {
               <em style={{ fontStyle: "italic" }}>{children}</em>
             ),
             a: ({ href, children }) => (
-              <a href={href} target="_blank" rel="noopener noreferrer" className="link">
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link"
+                {...linkSound}
+              >
                 {children}
               </a>
             ),

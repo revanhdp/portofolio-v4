@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import PageWrapper from "@/components/PageWrapper";
 import { projects, archivedProjects } from "@/lib/data";
+import { hoverSound, linkSound } from "@/lib/sound";
 
 // GitHub SVG (not in lucide-react)
 function GithubIcon({ size = 12 }: { size?: number }) {
@@ -25,6 +26,7 @@ function ProjectRow({ project, index }: ProjectRowProps) {
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2, delay: index * 0.04 }}
+      {...hoverSound}
       style={{
         display: "flex",
         alignItems: "center",
@@ -57,12 +59,13 @@ function ProjectRow({ project, index }: ProjectRowProps) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Visit ${project.name}`}
+              {...linkSound}
               style={{
                 color: "var(--muted)",
                 display: "flex",
                 transition: "color 0.15s",
               }}
-              className="hover:text-zinc-900"
+              className="hover-foreground"
             >
               <ExternalLink size={12} strokeWidth={1.5} />
             </a>
@@ -73,12 +76,13 @@ function ProjectRow({ project, index }: ProjectRowProps) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${project.name} on GitHub`}
+              {...linkSound}
               style={{
                 color: "var(--muted)",
                 display: "flex",
                 transition: "color 0.15s",
               }}
-              className="hover:text-zinc-900"
+              className="hover-foreground"
             >
               <GithubIcon size={12} />
             </a>

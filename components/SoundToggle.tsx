@@ -2,34 +2,39 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import {
+  isSoundEnabled,
+  playHover,
+  playSoundOff,
+  playSoundOn,
+  setSoundEnabled,
+} from "@/lib/sound";
 
 export default function SoundToggle() {
   const [soundOn, setSoundOn] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setSoundOn(isSoundEnabled());
     setMounted(true);
+
+    const handleSoundChange = () => {
+      setSoundOn(isSoundEnabled());
+    };
+    window.addEventListener("porto:sound-change", handleSoundChange);
+    return () => window.removeEventListener("porto:sound-change", handleSoundChange);
   }, []);
 
   const handleToggle = () => {
     const next = !soundOn;
-    setSoundOn(next);
 
-    if (next && mounted) {
-      try {
-        const ctx = new AudioContext();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.setValueAtTime(880, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.08);
-        gain.gain.setValueAtTime(0.08, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 0.1);
-      } catch (_) {}
-    }
+    // Both cues bypass the enabled-gate: turning sound on has to be
+    // audible, and turning it off has to be heard before it stops.
+    if (next) playSoundOn();
+    else playSoundOff();
+
+    setSoundOn(next);
+    setSoundEnabled(next);
   };
 
   if (!mounted) return null;
@@ -37,6 +42,7 @@ export default function SoundToggle() {
   return (
     <motion.button
       onClick={handleToggle}
+      onMouseEnter={playHover}
       whileTap={{ scale: 0.96 }}
       style={{
         display: "inline-flex",
@@ -53,7 +59,7 @@ export default function SoundToggle() {
         letterSpacing: "inherit",
         transition: "color 0.15s",
       }}
-      className="hover:text-zinc-900"
+      className="hover-foreground"
       aria-label={soundOn ? "Turn sound off" : "Turn sound on"}
     >
       {/* Speaker icon SVG */}
