@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import PageWrapper from "@/components/PageWrapper";
 import WorkProjectRow from "@/components/WorkProjectRow";
+import CompanyBadge from "@/components/CompanyBadge";
 import { works, type WorkExperience } from "@/lib/data";
 import { playHover } from "@/lib/sound";
 
@@ -29,25 +30,7 @@ function WorkEntry({ work, offset }: WorkEntryProps) {
           paddingBottom: "8px",
         }}
       >
-        <div
-          style={{
-            width: "26px",
-            height: "26px",
-            borderRadius: "6px",
-            backgroundColor: work.logoColor,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#fff",
-            fontSize: "11px",
-            fontWeight: 600,
-            flexShrink: 0,
-            letterSpacing: "0",
-          }}
-          aria-hidden="true"
-        >
-          {work.logo}
-        </div>
+        <CompanyBadge company={work.company} logo={work.logo} />
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <div

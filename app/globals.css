@@ -137,6 +137,31 @@ em, i {
   }
 }
 
+/* ── Row hover ──────────────────────────────────────────────────────
+   Painted by a pseudo-element inset past the row on both sides, so the
+   tint reads as a band with a little air around the text without any
+   margin or padding that would shift the row's contents. */
+.row-hover {
+  position: relative;
+  /* Makes the row its own stacking context, so the z-index:-1 tint below
+     is contained by the row instead of sliding under <main>'s background. */
+  isolation: isolate;
+}
+.row-hover::before {
+  content: "";
+  position: absolute;
+  inset: 0 -10px;
+  z-index: -1;
+  border-radius: 6px;
+  background-color: transparent;
+  transition: background-color 0.15s ease;
+  pointer-events: none;
+}
+.row-hover:hover::before,
+.row-hover:focus-visible::before {
+  background-color: var(--card);
+}
+
 /* Utility for hover foreground */
 .hover-foreground {
   transition: color 0.15s ease, opacity 0.15s ease;

@@ -27,14 +27,16 @@ export type WorkIcon =
 export type WorkExperience = {
   id: string;
   company: string;
-  logo: string;
-  logoColor: string;
+  /** Logo file in /public; falls back to the company monogram when absent. */
+  logo?: string;
   period: string;
   role: string;
   projects: {
     icon: WorkIcon;
     name: string;
     description: string;
+    /** Project id — makes the row link to /projects/<slug>. */
+    slug?: string;
   }[];
 };
 
@@ -47,6 +49,12 @@ export type Writing = {
   readingTime: number;
 };
 
+export type ProjectImage = {
+  /** File in /public — e.g. "/projects/emanifest/dashboard.png". */
+  src: string;
+  caption: string;
+};
+
 export type Project = {
   id: string;
   name: string;
@@ -54,6 +62,15 @@ export type Project = {
   url?: string;
   github?: string;
   archived?: boolean;
+  /* Everything below feeds the detail page at /projects/<id>. */
+  year: string;
+  role: string;
+  /** One entry per paragraph. */
+  overview: string[];
+  stack: string[];
+  highlights: string[];
+  /** Screenshots. The gallery is skipped entirely when this is empty. */
+  images?: ProjectImage[];
 };
 
 export type StackCategory = {
@@ -70,24 +87,26 @@ export const works: WorkExperience[] = [
   {
     id: "abhipraya",
     company: "Abhipraya",
-    logo: "A",
-    logoColor: "#2563eb",
+    logo: "/abhi.png",
     period: "2024 – Present",
     role: "Software Engineer / Web Developer",
     projects: [
       {
         icon: "ship",
         name: "eManifest (Kemenhub)",
+        slug: "emanifest",
         description: "Sistem manifest digital Kemenhub RI",
       },
       {
         icon: "megaphone",
         name: "eKompu (Kemen PUPR)",
+        slug: "ekompu",
         description: "Portal biro komunikasi publik Kementerian PUPR",
       },
       {
         icon: "building",
         name: "PKP HUB (Kemen PKP)",
+        slug: "pkp-hub",
         description: "Platform portal perumahan & kawasan permukiman",
       },
     ],
@@ -95,8 +114,7 @@ export const works: WorkExperience[] = [
   {
     id: "studi-independen-2",
     company: "Studi Independen (Batch 2)",
-    logo: "S",
-    logoColor: "#6366f1",
+    logo: "/celerates.png",
     period: "2023 – 2024",
     role: "Full-Stack Web Development Fellow",
     projects: [
@@ -115,8 +133,7 @@ export const works: WorkExperience[] = [
   {
     id: "studi-independen-1",
     company: "Studi Independen (Batch 1)",
-    logo: "S",
-    logoColor: "#8b5cf6",
+    logo: "/nf.png",
     period: "2023",
     role: "Frontend Engineering Fellow",
     projects: [
@@ -130,8 +147,6 @@ export const works: WorkExperience[] = [
   {
     id: "freelance",
     company: "Freelance",
-    logo: "F",
-    logoColor: "#0ea5e9",
     period: "2022 – 2023",
     role: "Web Developer",
     projects: [
@@ -467,17 +482,55 @@ export const projects: Project[] = [
   {
     id: "emanifest",
     name: "eManifest (Kemenhub)",
-    description: "Sistem manifest digital terintegrasi untuk Kementerian Perhubungan RI",
+    description:
+      "Sistem manifest digital terintegrasi untuk Kementerian Perhubungan RI",
+    year: "2024 – Present",
+    role: "Software Engineer",
+    overview: [
+      "eManifest digitises the passenger and cargo manifest process for Indonesian sea transport, replacing paper submissions with a single portal that operators, port officers, and the ministry all work from.",
+      "The hard part is not the forms — it is that a manifest passes through several parties before it is final, and every one of them needs to see the same state without stepping on each other.",
+    ],
+    stack: ["TypeScript", "Next.js", "Laravel", "PostgreSQL", "Tailwind CSS"],
+    highlights: [
+      "Manifest submission and verification flow shared by operators and port officers",
+      "Role-based access across ministry, port, and operator accounts",
+      "Reporting views that aggregate manifests by route, vessel, and period",
+    ],
   },
   {
     id: "ekompu",
     name: "eKompu (Kemen PUPR)",
-    description: "Portal layanan biro komunikasi publik terintegrasi Kementerian PUPR",
+    description:
+      "Portal layanan biro komunikasi publik terintegrasi Kementerian PUPR",
+    year: "2024",
+    role: "Web Developer",
+    overview: [
+      "eKompu is the public communications bureau portal for the Ministry of Public Works and Housing — the place its press releases, media requests, and public information services are published and managed from.",
+      "It carries a lot of editorial content, so most of the work went into making the publishing side quick to use and the public side quick to load.",
+    ],
+    stack: ["Laravel", "MySQL", "Tailwind CSS", "Alpine.js"],
+    highlights: [
+      "Editorial workflow for press releases and public information requests",
+      "Media library shared across the bureau's publishing channels",
+      "Public-facing pages tuned for fast first load on slow connections",
+    ],
   },
   {
     id: "pkp-hub",
     name: "PKP HUB (Kemen PKP)",
     description: "Platform portal perumahan dan kawasan permukiman terpadu",
+    year: "2024 – Present",
+    role: "Software Engineer",
+    overview: [
+      "PKP HUB brings housing and settlement data for the Ministry of Housing and Settlement Areas into one portal, so programme data that used to live in separate spreadsheets and regional systems can be read in a single place.",
+      "Most of the design effort was in the data model: the same programme is reported differently by different regions, and the portal has to reconcile that without losing the detail.",
+    ],
+    stack: ["TypeScript", "Next.js", "Laravel", "PostgreSQL"],
+    highlights: [
+      "Unified programme data across regional housing offices",
+      "Dashboard views for programme progress by region and period",
+      "Import pipeline that validates regional submissions before they land",
+    ],
   },
   {
     id: "kanban-flow",
@@ -485,18 +538,54 @@ export const projects: Project[] = [
     description: "Visual project management with real-time collaboration",
     url: "https://kanbanflow.app",
     github: "https://github.com/revanzahadiputra/kanbanflow",
+    year: "2025",
+    role: "Solo project",
+    overview: [
+      "A board-based project tracker built to see how far real-time collaboration can go before it needs a dedicated backend team.",
+      "Cards move optimistically on the client and reconcile against the server, so a board still feels immediate when two people drag the same card at once.",
+    ],
+    stack: ["TypeScript", "React", "Node.js", "PostgreSQL", "WebSocket"],
+    highlights: [
+      "Optimistic drag-and-drop that reconciles against server state",
+      "Presence indicators showing who is looking at a board",
+      "Keyboard-first card creation and navigation",
+    ],
   },
   {
     id: "devnotes",
     name: "DevNotes",
     description: "Markdown note-taking app for developers",
     github: "https://github.com/revanzahadiputra/devnotes",
+    year: "2025",
+    role: "Solo project",
+    overview: [
+      "A local-first Markdown notebook for the notes that pile up while debugging — snippets, stack traces, and half-formed ideas.",
+      "Notes are plain files on disk, so nothing is trapped in a database if the app goes away.",
+    ],
+    stack: ["TypeScript", "React", "Vite", "IndexedDB"],
+    highlights: [
+      "Local-first storage with plain Markdown files as the source of truth",
+      "Full-text search across every note",
+      "Syntax-highlighted code blocks with one-key copy",
+    ],
   },
   {
     id: "openapi-ui",
     name: "OpenAPI UI",
     description: "Beautiful interactive API documentation generator",
     url: "https://openapiui.dev",
+    year: "2024",
+    role: "Solo project",
+    overview: [
+      "A documentation renderer that takes an OpenAPI schema and produces something worth reading, without the density that generated docs usually end up with.",
+      "Every endpoint is explorable in place, so the docs double as a client for trying requests.",
+    ],
+    stack: ["TypeScript", "Next.js", "Tailwind CSS", "OpenAPI"],
+    highlights: [
+      "Schema-driven pages generated straight from an OpenAPI document",
+      "In-page request runner for trying endpoints against a live server",
+      "Deep links to any endpoint, parameter, or schema",
+    ],
   },
   {
     id: "color-palette",
@@ -504,12 +593,36 @@ export const projects: Project[] = [
     description: "Generate harmonious color palettes for your design system",
     url: "https://palettecraft.io",
     github: "https://github.com/revanzahadiputra/palettecraft",
+    year: "2024",
+    role: "Solo project",
+    overview: [
+      "A palette generator that works in perceptual colour space, so a scale that looks evenly spaced actually is evenly spaced.",
+      "Contrast is checked as you build rather than after, which tends to stop unusable colours from reaching a design system in the first place.",
+    ],
+    stack: ["TypeScript", "React", "OKLCH", "Canvas"],
+    highlights: [
+      "Perceptually even scales generated in OKLCH",
+      "Live WCAG contrast checks against every surface in the palette",
+      "Export to CSS custom properties, Tailwind config, or JSON",
+    ],
   },
   {
     id: "gitpulse",
     name: "GitPulse",
     description: "GitHub activity dashboard and streak tracker",
     github: "https://github.com/revanzahadiputra/gitpulse",
+    year: "2023",
+    role: "Solo project",
+    overview: [
+      "A dashboard for reading your own GitHub activity — commit rhythm, language mix, and which repositories actually got attention.",
+      "It caches aggressively, because the interesting views need far more API calls than GitHub's rate limit allows on demand.",
+    ],
+    stack: ["TypeScript", "Next.js", "GitHub API", "Redis"],
+    highlights: [
+      "Contribution heatmap and streak tracking across all repositories",
+      "Language breakdown weighted by lines actually changed",
+      "Cached aggregation layer that keeps within GitHub's rate limits",
+    ],
   },
 ];
 
@@ -520,6 +633,17 @@ export const archivedProjects: Project[] = [
     description: "My first blog built with Gatsby and MDX",
     github: "https://github.com/revanzahadiputra/blog-v1",
     archived: true,
+    year: "2022",
+    role: "Solo project",
+    overview: [
+      "My first attempt at a personal site — Gatsby, MDX, and far more plugins than the job needed.",
+      "It taught me most of what I know about build pipelines, mainly by breaking.",
+    ],
+    stack: ["Gatsby", "MDX", "GraphQL", "styled-components"],
+    highlights: [
+      "MDX posts with embedded interactive components",
+      "Static generation with image processing at build time",
+    ],
   },
   {
     id: "weather-app",
@@ -527,5 +651,16 @@ export const archivedProjects: Project[] = [
     description: "Minimal weather app with location detection",
     github: "https://github.com/revanzahadiputra/cuaca",
     archived: true,
+    year: "2022",
+    role: "Solo project",
+    overview: [
+      "A small weather app in Bahasa Indonesia, built to practise consuming a third-party API and handling permissions properly.",
+      "Retired once the free tier of the weather API it depended on disappeared.",
+    ],
+    stack: ["JavaScript", "React", "OpenWeather API"],
+    highlights: [
+      "Geolocation with a graceful fallback to manual city search",
+      "Offline-tolerant rendering from the last successful response",
+    ],
   },
 ];

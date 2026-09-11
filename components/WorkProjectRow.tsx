@@ -9,8 +9,9 @@ import {
   Megaphone,
   Ship,
 } from "lucide-react";
+import Link from "next/link";
 import type { WorkExperience, WorkIcon } from "@/lib/data";
-import { playHover } from "@/lib/sound";
+import { linkSound, playHover } from "@/lib/sound";
 
 // Data stays serializable — icon keys are mapped to components here.
 const icons: Record<WorkIcon, typeof Ship> = {
@@ -38,17 +39,8 @@ export default function WorkProjectRow({
 }: WorkProjectRowProps) {
   const Icon = icons[project.icon];
 
-  return (
-    <div
-      onMouseEnter={playHover}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "10px",
-        padding: "7px 0",
-        borderBottom: divider ? "1px solid var(--border)" : "none",
-      }}
-    >
+  const row = (
+    <>
       {/* Icon column — same line weight as the rest of the UI */}
       <span
         style={{
@@ -96,6 +88,37 @@ export default function WorkProjectRow({
           {project.description}
         </span>
       </span>
-    </div>
+    </>
+  );
+
+  const style = {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    padding: "7px 0",
+    borderBottom: divider ? "1px solid var(--border)" : "none",
+    textDecoration: "none",
+    color: "inherit",
+  } as const;
+
+  // Only rows that lead somewhere get the hover tint — an inert row that
+  // lights up would promise a click that does not exist.
+  if (!project.slug) {
+    return (
+      <div onMouseEnter={playHover} style={style}>
+        {row}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href={`/projects/${project.slug}`}
+      {...linkSound}
+      className="row-hover"
+      style={style}
+    >
+      {row}
+    </Link>
   );
 }

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { works } from "@/lib/data";
 import { linkSound, playCollapse, playExpand, playHover } from "@/lib/sound";
 import WorkProjectRow from "@/components/WorkProjectRow";
+import CompanyBadge from "@/components/CompanyBadge";
 
 // The home list stays a preview — the rest lives on /work.
 const PREVIEW_COUNT = 3;
@@ -30,6 +31,7 @@ function WorkItem({ work }: WorkItemProps) {
         onClick={toggle}
         onMouseEnter={playHover}
         aria-expanded={expanded}
+        className="row-hover"
         style={{
           width: "100%",
           textAlign: "left",
@@ -47,26 +49,7 @@ function WorkItem({ work }: WorkItemProps) {
           borderBottom: expanded ? "none" : "1px solid var(--border)",
         }}
       >
-        {/* Company logo badge */}
-        <div
-          style={{
-            width: "26px",
-            height: "26px",
-            borderRadius: "6px",
-            backgroundColor: work.logoColor,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#fff",
-            fontSize: "11px",
-            fontWeight: 600,
-            flexShrink: 0,
-            letterSpacing: "0",
-          }}
-          aria-hidden="true"
-        >
-          {work.logo}
-        </div>
+        <CompanyBadge company={work.company} logo={work.logo} />
 
         {/* Company name + period */}
         <div style={{ flex: 1, display: "flex", alignItems: "center", gap: "8px" }}>
@@ -97,7 +80,11 @@ function WorkItem({ work }: WorkItemProps) {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.22, ease: "easeInOut" }}
-            style={{ overflow: "hidden" }}
+            style={{
+              overflow: "hidden",
+              marginInline: "-10px",
+              paddingInline: "10px",
+            }}
           >
             {/* Sub-items share the row's left edge — the icon sits in the
                 same 26px column as the company badge, so the names line up
