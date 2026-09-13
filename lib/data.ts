@@ -496,6 +496,16 @@ export const projects: Project[] = [
       "Role-based access across ministry, port, and operator accounts",
       "Reporting views that aggregate manifests by route, vessel, and period",
     ],
+    images: [
+      {
+        src: "/projects/emanifest/dashboard.png",
+        caption: "Dasbor pemantauan surat muatan barang, alur muat-bongkar, dan verifikasi QR Code",
+      },
+      {
+        src: "/projects/emanifest/dashboard.png",
+        caption: "Tampilan rute perjalanan dan konfirmasi status penerimaan logistik pelabuhan",
+      },
+    ],
   },
   {
     id: "ekompu",

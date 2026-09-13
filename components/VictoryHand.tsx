@@ -170,7 +170,6 @@ export default function VictoryHand() {
           ? "Lambaian tangan bergerak (aktif)"
           : "Icon tangan damai (hover untuk melambaikan tangan)"
       }
-      title="Hover untuk melihat lambaian tangan bergerak 👋"
     >
       {/* 1. Default Peace Hand (fades out smoothly on hover) */}
       <motion.div

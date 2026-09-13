@@ -36,9 +36,10 @@ export default function WritingsPage() {
         {writings.map((writing, index) => (
           <motion.div
             key={writing.slug}
-            initial={{ opacity: 0, y: 4 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2, delay: index * 0.04 }}
+            whileTap={{ scale: 0.99 }}
+            transition={{ duration: 0.25, delay: index * 0.04, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
             <Link
               href={`/writings/${writing.slug}`}
@@ -46,24 +47,24 @@ export default function WritingsPage() {
               {...linkSound}
               style={{
                 display: "flex",
-                alignItems: "center",
+                alignItems: "baseline",
                 justifyContent: "space-between",
                 padding: "10px 0",
                 borderBottom: "1px solid var(--border)",
                 textDecoration: "none",
                 color: "inherit",
                 gap: "16px",
+                touchAction: "manipulation",
               }}
-              className="group"
+              className="row-hover group"
             >
               <span
                 style={{
                   fontSize: "14px",
                   fontWeight: 400,
                   color: "var(--foreground)",
-                  transition: "color 0.15s",
                 }}
-                className="group-hover:opacity-60 transition-opacity"
+                className="group-hover:translate-x-0.5 transition-transform duration-200"
               >
                 {writing.title}
               </span>

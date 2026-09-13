@@ -52,11 +52,27 @@ function WorkItem({ work }: WorkItemProps) {
         <CompanyBadge company={work.company} logo={work.logo} />
 
         {/* Company name + period */}
-        <div style={{ flex: 1, display: "flex", alignItems: "center", gap: "8px" }}>
+        <div
+          style={{
+            flex: 1,
+            minWidth: 0,
+            display: "flex",
+            alignItems: "baseline",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "2px 8px",
+          }}
+        >
           <span style={{ fontSize: "15px", fontWeight: 500 }}>
             {work.company}
           </span>
-          <span style={{ fontSize: "14px", color: "var(--muted)" }}>
+          <span
+            style={{
+              fontSize: "13px",
+              color: "var(--muted)",
+              flexShrink: 0,
+            }}
+          >
             {work.period}
           </span>
         </div>

@@ -27,10 +27,12 @@ interface StackRowProps {
 function StackRow({ item, index }: StackRowProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 4 }}
+      initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2, delay: index * 0.04 }}
+      whileTap={{ scale: 0.99 }}
+      transition={{ duration: 0.25, delay: index * 0.04, ease: [0.25, 0.46, 0.45, 0.94] }}
       {...hoverSound}
+      className="row-hover"
       style={{
         display: "flex",
         alignItems: "center",
@@ -46,6 +48,7 @@ function StackRow({ item, index }: StackRowProps) {
           fontSize: "14px",
           fontWeight: 400,
           color: "var(--foreground)",
+          flexShrink: 0,
         }}
       >
         {item.name}
@@ -56,9 +59,8 @@ function StackRow({ item, index }: StackRowProps) {
         style={{
           fontSize: "13px",
           color: "var(--muted)",
-          flexShrink: 0,
           textAlign: "right",
-          maxWidth: "220px",
+          maxWidth: "min(240px, 50%)",
           overflow: "hidden",
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",

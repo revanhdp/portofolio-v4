@@ -71,7 +71,9 @@ export default function WorkProjectRow({
             fontWeight: 500,
             color: "var(--foreground)",
             whiteSpace: "nowrap",
+            flexShrink: 0,
           }}
+          className={project.slug ? "group-hover:translate-x-0.5 transition-transform duration-200" : undefined}
         >
           {project.name}
         </span>
@@ -115,8 +117,11 @@ export default function WorkProjectRow({
     <Link
       href={`/projects/${project.slug}`}
       {...linkSound}
-      className="row-hover"
-      style={style}
+      className="row-hover group"
+      style={{
+        ...style,
+        touchAction: "manipulation",
+      }}
     >
       {row}
     </Link>

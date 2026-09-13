@@ -2,9 +2,12 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { ExternalLink, ArrowLeft } from "lucide-react";
 import PageWrapper from "@/components/PageWrapper";
 import GithubIcon from "@/components/GithubIcon";
+import StackBadge from "@/components/StackBadge";
+import ProjectImageFrame from "@/components/ProjectImageFrame";
 import type { Project } from "@/lib/data";
 import { linkSound } from "@/lib/sound";
 
@@ -162,24 +165,14 @@ export default function ProjectDetail({ project }: Props) {
           style={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "6px",
+            gap: "8px",
             listStyle: "none",
+            padding: 0,
+            margin: 0,
           }}
         >
           {project.stack.map((tech) => (
-            <li
-              key={tech}
-              style={{
-                fontSize: "13px",
-                color: "var(--foreground)",
-                backgroundColor: "var(--card)",
-                border: "1px solid var(--border)",
-                borderRadius: "6px",
-                padding: "3px 8px",
-              }}
-            >
-              {tech}
-            </li>
+            <StackBadge key={tech} name={tech} />
           ))}
         </ul>
       </motion.section>
@@ -209,48 +202,44 @@ export default function ProjectDetail({ project }: Props) {
       {hasImages && (
         <motion.section {...fadeUp(0.24)} style={{ marginTop: "32px" }}>
           <SectionHeading>Screens</SectionHeading>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "20px",
-            }}
-          >
-            {project.images?.map((image) => (
-              <figure key={image.src}>
-                <div
-                  style={{
-                    position: "relative",
-                    width: "100%",
-                    aspectRatio: "16 / 10",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                    backgroundColor: "var(--card)",
-                    overflow: "hidden",
-                  }}
-                >
-                  <Image
-                    src={image.src}
-                    alt={image.caption}
-                    fill
-                    sizes="(max-width: 560px) 100vw, 512px"
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
-                <figcaption
-                  style={{
-                    fontSize: "13px",
-                    color: "var(--muted)",
-                    marginTop: "8px",
-                  }}
-                >
-                  {image.caption}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+          <ProjectImageFrame
+            images={project.images!}
+            windowTitle={`${project.id}.app`}
+          />
         </motion.section>
       )}
+
+      {/* Bottom back to projects navigation */}
+      <div
+        style={{
+          marginTop: "48px",
+          paddingTop: "24px",
+          borderTop: "1px solid var(--border)",
+        }}
+      >
+        <Link
+          href="/projects"
+          {...linkSound}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
+            fontSize: "13px",
+            color: "var(--muted)",
+            textDecoration: "none",
+            touchAction: "manipulation",
+          }}
+          className="hover-foreground group"
+        >
+          <span
+            style={{ display: "inline-flex" }}
+            className="group-hover:-translate-x-1 transition-transform duration-200"
+          >
+            <ArrowLeft size={12} strokeWidth={1.75} />
+          </span>
+          <span>All projects</span>
+        </Link>
+      </div>
     </PageWrapper>
   );
 }

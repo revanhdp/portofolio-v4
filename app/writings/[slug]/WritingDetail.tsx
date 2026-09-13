@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import PageWrapper from "@/components/PageWrapper";
 import { Writing } from "@/lib/data";
 import { linkSound } from "@/lib/sound";
@@ -230,6 +232,38 @@ export default function WritingDetail({ writing }: Props) {
         >
           {writing.content}
         </ReactMarkdown>
+
+        {/* Bottom back to writings navigation */}
+        <div
+          style={{
+            marginTop: "48px",
+            paddingTop: "24px",
+            borderTop: "1px solid var(--border)",
+          }}
+        >
+          <Link
+            href="/writings"
+            {...linkSound}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              fontSize: "13px",
+              color: "var(--muted)",
+              textDecoration: "none",
+              touchAction: "manipulation",
+            }}
+            className="hover-foreground group"
+          >
+            <span
+              style={{ display: "inline-flex" }}
+              className="group-hover:-translate-x-1 transition-transform duration-200"
+            >
+              <ArrowLeft size={12} strokeWidth={1.75} />
+            </span>
+            <span>All writings</span>
+          </Link>
+        </div>
       </motion.article>
     </PageWrapper>
   );

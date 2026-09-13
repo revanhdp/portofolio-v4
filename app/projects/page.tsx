@@ -15,14 +15,15 @@ interface ProjectRowProps {
 function ProjectRow({ project, index }: ProjectRowProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 4 }}
+      initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2, delay: index * 0.04 }}
+      whileTap={{ scale: 0.99 }}
+      transition={{ duration: 0.25, delay: index * 0.04, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
       <Link
         href={`/projects/${project.id}`}
         {...linkSound}
-        className="row-hover"
+        className="row-hover group"
         style={{
           display: "flex",
           alignItems: "center",
@@ -32,6 +33,7 @@ function ProjectRow({ project, index }: ProjectRowProps) {
           gap: "16px",
           textDecoration: "none",
           color: "inherit",
+          touchAction: "manipulation",
         }}
       >
         {/* Left: name */}
@@ -40,7 +42,10 @@ function ProjectRow({ project, index }: ProjectRowProps) {
             fontSize: "14px",
             fontWeight: 400,
             color: "var(--foreground)",
+            flexShrink: 0,
+            transition: "color 0.15s ease",
           }}
+          className="group-hover:text-[var(--foreground)]"
         >
           {project.name}
         </span>
@@ -52,6 +57,7 @@ function ProjectRow({ project, index }: ProjectRowProps) {
             alignItems: "center",
             gap: "8px",
             minWidth: 0,
+            justifyContent: "flex-end",
           }}
         >
           <span
@@ -59,7 +65,7 @@ function ProjectRow({ project, index }: ProjectRowProps) {
               fontSize: "13px",
               color: "var(--muted)",
               textAlign: "right",
-              maxWidth: "220px",
+              maxWidth: "min(240px, 50%)",
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
@@ -69,6 +75,7 @@ function ProjectRow({ project, index }: ProjectRowProps) {
           </span>
           <span
             style={{ color: "var(--muted)", display: "flex", flexShrink: 0 }}
+            className="group-hover:translate-x-0.5 group-hover:text-[var(--foreground)] transition-all duration-200"
             aria-hidden="true"
           >
             <ChevronRight size={14} strokeWidth={1.5} />

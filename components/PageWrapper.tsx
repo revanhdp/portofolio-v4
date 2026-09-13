@@ -8,11 +8,13 @@ import { linkSound } from "@/lib/sound";
 interface PageWrapperProps {
   children: React.ReactNode;
   showBack?: boolean;
+  maxWidth?: string;
 }
 
 export default function PageWrapper({
   children,
   showBack = false,
+  maxWidth = "640px",
 }: PageWrapperProps) {
   return (
     <main
@@ -22,15 +24,11 @@ export default function PageWrapper({
         transition: "background-color 0.2s ease, color 0.2s ease",
       }}
     >
-      {/* Exact arikko.dev container: max-w-[40rem]=640px, padding 80px top/bottom, 24px sides */}
+      {/* Modern responsive container */}
       <div
+        className="main-container"
         style={{
-          maxWidth: "560px",
-          margin: "0 auto",
-          paddingTop: "80px",
-          paddingBottom: "80px",
-          paddingLeft: "24px",
-          paddingRight: "24px",
+          maxWidth,
         }}
       >
         {showBack && (
@@ -46,14 +44,20 @@ export default function PageWrapper({
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: "5px",
+                gap: "6px",
                 fontSize: "13px",
                 color: "var(--muted)",
                 textDecoration: "none",
+                touchAction: "manipulation",
               }}
-              className="hover-foreground"
+              className="hover-foreground group"
             >
-              <ArrowLeft size={12} strokeWidth={1.75} />
+              <span
+                style={{ display: "inline-flex" }}
+                className="group-hover:-translate-x-1 transition-transform duration-200"
+              >
+                <ArrowLeft size={12} strokeWidth={1.75} />
+              </span>
               <span>Index</span>
             </Link>
           </motion.div>
