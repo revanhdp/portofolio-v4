@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     title: "Revanza Hadi Putra — Software Engineer",
     description:
       "Software Engineer interested in building clean, useful products. Based in Indonesia.",
-    url: "https://revanza.dev",
+    url: "https://revanhdp.tech",
     siteName: "Revanza Hadi Putra",
     locale: "en_US",
     type: "website",
