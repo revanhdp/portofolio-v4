@@ -204,17 +204,19 @@ em, i {
 
 /* ── Hero stage (mobile-first greeting focus) ── */
 .hero-stage {
-  min-height: calc(100svh - 130px);
+  min-height: calc(100svh - 56px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
+  margin-bottom: 32px;
 }
 @media (min-width: 640px) {
   .hero-stage {
     min-height: auto;
     display: block;
     justify-content: flex-start;
+    margin-bottom: 0;
   }
 }
 

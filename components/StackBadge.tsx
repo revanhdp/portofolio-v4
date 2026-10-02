@@ -414,6 +414,7 @@ export default function StackBadge({ name }: { name: string }) {
       <motion.span
         variants={{
           hover: {
+            scale: 1.25,
             rotate: [0, -14, 12, -10, 8, -4, 2, 0],
             transition: { duration: 0.55, ease: "easeInOut" },
           },

@@ -21,27 +21,36 @@ export function InlineExpand({ summary, detail }: InlineExpandProps) {
       <AnimatePresence mode="wait">
         <motion.span
           key="detail"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.15 }}
+          initial={{ opacity: 0, filter: "blur(4px)" }}
+          animate={{ opacity: 1, filter: "blur(0px)" }}
+          exit={{ opacity: 0, filter: "blur(4px)" }}
+          transition={{ duration: 0.22, ease: "easeOut" }}
           style={{ display: "inline" }}
         >
           {detail}
-          <button
+          <motion.button
+            type="button"
+            whileTap={{ scale: 0.95 }}
             onClick={toggle}
             onMouseEnter={playHover}
             className="link-dotted"
           >
             (less)
-          </button>
+          </motion.button>
         </motion.span>
       </AnimatePresence>
     );
   }
 
   return (
-    <button onClick={toggle} onMouseEnter={playHover} className="link-dotted">
+    <motion.button
+      type="button"
+      whileTap={{ scale: 0.95 }}
+      onClick={toggle}
+      onMouseEnter={playHover}
+      className="link-dotted"
+    >
       {summary}
-    </button>
+    </motion.button>
   );
 }

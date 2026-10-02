@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ExternalLink, ArrowLeft } from "lucide-react";
 import PageWrapper from "@/components/PageWrapper";
 import GithubIcon from "@/components/GithubIcon";
-import StackBadge from "@/components/StackBadge";
+import TechStackItem from "@/components/TechStackItem";
 import ProjectImageFrame from "@/components/ProjectImageFrame";
 import type { Project } from "@/lib/data";
 import { linkSound } from "@/lib/sound";
@@ -158,23 +158,21 @@ export default function ProjectDetail({ project }: Props) {
         </div>
       </motion.section>
 
-      {/* Tech stack — tiles built from the same tokens as the icon boxes */}
+      {/* Tech stack — interactive floating icons with wobble & enlarge */}
       <motion.section {...fadeUp(0.12)} style={{ marginTop: "32px" }}>
         <SectionHeading>Stack</SectionHeading>
-        <ul
+        <div
+          className="flex flex-wrap items-center gap-2.5 sm:gap-3.5"
           style={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "8px",
-            listStyle: "none",
-            padding: 0,
-            margin: 0,
+            alignItems: "center",
           }}
         >
-          {project.stack.map((tech) => (
-            <StackBadge key={tech} name={tech} />
+          {project.stack.map((tech, index) => (
+            <TechStackItem key={tech} name={tech} index={index} />
           ))}
-        </ul>
+        </div>
       </motion.section>
 
       {/* Highlights */}

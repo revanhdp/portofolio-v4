@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import * as Tooltip from "@radix-ui/react-tooltip";
 import { linkSound } from "@/lib/sound";
 
 interface PageWrapperProps {
@@ -17,13 +18,14 @@ export default function PageWrapper({
   maxWidth = "640px",
 }: PageWrapperProps) {
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "var(--background)",
-        transition: "background-color 0.2s ease, color 0.2s ease",
-      }}
-    >
+    <Tooltip.Provider delayDuration={120} skipDelayDuration={300}>
+      <main
+        style={{
+          minHeight: "100vh",
+          backgroundColor: "var(--background)",
+          transition: "background-color 0.2s ease, color 0.2s ease",
+        }}
+      >
       {/* Modern responsive container */}
       <div
         className="main-container"
@@ -72,5 +74,6 @@ export default function PageWrapper({
         </motion.div>
       </div>
     </main>
+    </Tooltip.Provider>
   );
 }

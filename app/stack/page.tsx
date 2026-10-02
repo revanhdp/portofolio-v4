@@ -89,9 +89,11 @@ export default function StackPage() {
             display: "flex",
             alignItems: "center",
             gap: "6px",
-            marginTop: "24px",
+            marginTop: "22px",
             overflowX: "auto",
             paddingBottom: "4px",
+            paddingRight: "12px",
+            WebkitOverflowScrolling: "touch",
             scrollbarWidth: "none",
           }}
         >
@@ -107,7 +109,7 @@ export default function StackPage() {
                 }}
                 onMouseEnter={playHover}
                 style={{
-                  padding: "5px 12px",
+                  padding: "6px 14px",
                   borderRadius: "9999px",
                   fontSize: "13px",
                   fontWeight: isActive ? 500 : 400,
@@ -122,6 +124,7 @@ export default function StackPage() {
                     "color 0.15s ease, background-color 0.15s ease",
                   whiteSpace: "nowrap",
                   userSelect: "none",
+                  touchAction: "manipulation",
                 }}
               >
                 {tab.label}
@@ -130,17 +133,23 @@ export default function StackPage() {
           })}
         </motion.div>
 
-        {/* ── Interactive Live Spotlight Display Bar (Borderless) ── */}
+        {/* ── Interactive Live Spotlight Display Bar (Sticky Glassmorphic) ── */}
         <motion.div
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
           style={{
+            position: "sticky",
+            top: "12px",
+            zIndex: 20,
             marginTop: "16px",
-            padding: "11px 16px",
+            padding: "10px 16px",
             borderRadius: "14px",
-            backgroundColor: "var(--card)",
-            border: "none",
+            backgroundColor: "color-mix(in srgb, var(--card) 88%, transparent)",
+            backdropFilter: "blur(14px)",
+            WebkitBackdropFilter: "blur(14px)",
+            border: "1px solid color-mix(in srgb, var(--border) 40%, transparent)",
+            boxShadow: "0 4px 20px -2px rgba(0, 0, 0, 0.05)",
             display: "flex",
             alignItems: "center",
             gap: "10px",
@@ -158,9 +167,10 @@ export default function StackPage() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "10px",
+                  gap: "8px",
                   width: "100%",
                   fontSize: "13px",
+                  minWidth: 0,
                 }}
               >
                 <div
@@ -177,19 +187,22 @@ export default function StackPage() {
                   style={{
                     fontWeight: 550,
                     color: "var(--foreground)",
+                    flexShrink: 0,
                   }}
                 >
                   {activeTech.name}
                 </span>
                 {activeTech.note && (
                   <>
-                    <span style={{ color: "var(--muted)", opacity: 0.5 }}>•</span>
+                    <span style={{ color: "var(--muted)", opacity: 0.4, flexShrink: 0 }}>•</span>
                     <span
                       style={{
                         color: "var(--muted)",
+                        fontSize: "12.5px",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
+                        minWidth: 0,
                       }}
                     >
                       {activeTech.note}
@@ -212,15 +225,15 @@ export default function StackPage() {
                   fontSize: "13px",
                 }}
               >
-                <Sparkles size={13} strokeWidth={1.75} style={{ opacity: 0.7 }} />
-                <span>Hover or tap any icon to explore details & role</span>
+                <Sparkles size={13} strokeWidth={1.75} style={{ opacity: 0.7, flexShrink: 0 }} />
+                <span>Tap or hover any icon to explore details</span>
               </motion.div>
             )}
           </AnimatePresence>
         </motion.div>
 
         {/* ── Horizontal Stack Shelves (Side-by-Side) ── */}
-        <div style={{ marginTop: "28px", display: "flex", flexDirection: "column", gap: "28px" }}>
+        <div style={{ marginTop: "28px", display: "flex", flexDirection: "column", gap: "32px" }}>
           {visibleCategories.map((category, catIndex) => {
             const Icon = categoryIcons[category.icon] || Layers;
             return (
@@ -245,7 +258,7 @@ export default function StackPage() {
                   </span>
                   <h2
                     style={{
-                      fontSize: "14px",
+                      fontSize: "13.5px",
                       fontWeight: 500,
                       color: "var(--foreground)",
                     }}
@@ -264,13 +277,13 @@ export default function StackPage() {
                   </span>
                 </motion.div>
 
-                {/* Horizontal row of interactive wobbling icons (menyamping kanan/kiri) */}
+                {/* Horizontal row of interactive wobbling icons */}
                 <div
+                  className="flex flex-wrap items-center gap-2.5 sm:gap-3.5"
                   style={{
                     display: "flex",
                     flexWrap: "wrap",
                     alignItems: "center",
-                    gap: "10px",
                   }}
                 >
                   {category.items.map((item, itemIndex) => (

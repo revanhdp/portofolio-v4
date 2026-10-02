@@ -83,7 +83,7 @@ export default function HomePage() {
           }}
           onClick={() => {
             window.scrollTo({
-              top: window.innerHeight * 0.45,
+              top: window.innerHeight,
               behavior: "smooth",
             });
           }}
@@ -96,12 +96,19 @@ export default function HomePage() {
         </motion.button>
       </div>
 
-      {/* ── Bio: Smoothly reveals as user scrolls / nudges screen ── */}
+      {/* ── Bio: Staggered cinematic optical blur-to-focus reveal on scroll ── */}
       <motion.div
-        initial={{ opacity: 0, y: 22 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-20px" }}
-        transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-30px" }}
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              staggerChildren: 0.18,
+            },
+          },
+        }}
         style={{
           display: "flex",
           flexDirection: "column",
@@ -112,7 +119,20 @@ export default function HomePage() {
           marginBottom: "28px",
         }}
       >
-        <p>
+        <motion.p
+          variants={{
+            hidden: { opacity: 0, y: 20, filter: "blur(6px)" },
+            visible: {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              transition: {
+                duration: 0.55,
+                ease: [0.25, 0.46, 0.45, 0.94],
+              },
+            },
+          }}
+        >
           I&apos;m a Software Engineer interested in building{" "}
           <InlineExpand
             summary="(more)"
@@ -125,8 +145,21 @@ export default function HomePage() {
             }
           />{" "}
           products that actually matter, based in Indonesia.
-        </p>
-        <p>
+        </motion.p>
+        <motion.p
+          variants={{
+            hidden: { opacity: 0, y: 20, filter: "blur(6px)" },
+            visible: {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              transition: {
+                duration: 0.55,
+                ease: [0.25, 0.46, 0.45, 0.94],
+              },
+            },
+          }}
+        >
           Currently engineering at{" "}
           <span style={{ fontWeight: 500, color: "var(--foreground)" }}>
             Abhipraya
@@ -141,30 +174,53 @@ export default function HomePage() {
             }
           />
           , where I build impactful platforms including{" "}
-          <span style={{ fontWeight: 500 }}>eManifest</span> (Kemenhub),{" "}
-          <span style={{ fontWeight: 500 }}>eKompu</span> (Kemen PUPR), and{" "}
-          <span style={{ fontWeight: 500 }}>PKP HUB</span> (Kemen PKP).
-          Previously completed two certified independent study (Studi
-          Independen) programs in modern web software engineering.
-        </p>
+          <Link
+            href="/projects/emanifest"
+            className="link"
+            {...linkSound}
+            style={{ fontWeight: 500 }}
+          >
+            eManifest
+          </Link>{" "}
+          (Kemenhub),{" "}
+          <Link
+            href="/projects/ekompu"
+            className="link"
+            {...linkSound}
+            style={{ fontWeight: 500 }}
+          >
+            eKompu
+          </Link>{" "}
+          (Kemen PUPR), and{" "}
+          <Link
+            href="/projects/pkp-hub"
+            className="link"
+            {...linkSound}
+            style={{ fontWeight: 500 }}
+          >
+            PKP HUB
+          </Link>{" "}
+          (Kemen PKP). Previously completed two certified independent study
+          (Studi Independen) programs in modern web software engineering.
+        </motion.p>
       </motion.div>
 
-      {/* ── Work Section: Reveals on scroll ── */}
+      {/* ── Work Section: Reveals on scroll with smooth blur ── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-20px" }}
-        transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
+        initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        viewport={{ once: true, margin: "-30px" }}
+        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <WorkSection />
       </motion.div>
 
-      {/* ── Bottom links: Reveals on scroll ── */}
+      {/* ── Bottom links: Reveals on scroll with smooth blur ── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-20px" }}
-        transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
+        initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        viewport={{ once: true, margin: "-30px" }}
+        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
         style={{
           marginTop: "32px",
           display: "flex",
