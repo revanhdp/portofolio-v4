@@ -168,6 +168,7 @@ export const stack: StackCategory[] = [
       { name: "TypeScript", note: "Type-safe by default" },
       { name: "React", note: "Component-driven interfaces" },
       { name: "Next.js", note: "App Router, SSR & RSC" },
+      { name: "Vue.js", note: "Progressive reactive framework" },
       { name: "Tailwind CSS", note: "Utility-first styling" },
       { name: "Framer Motion", note: "Interface motion & transitions" },
     ],
@@ -178,6 +179,7 @@ export const stack: StackCategory[] = [
     icon: "backend",
     items: [
       { name: "Node.js", note: "Services & API layers" },
+      { name: "NestJS", note: "Enterprise TypeScript architecture" },
       { name: "Laravel", note: "PHP apps & enterprise portals" },
       { name: "Express", note: "Lightweight REST routing" },
       { name: "REST API", note: "Contract-first design" },

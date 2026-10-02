@@ -142,16 +142,44 @@ const stackRegistry: Record<string, StackMeta> = {
   },
   "Node.js": {
     colorLight: "#15803d",
-    colorDark: "#4ade80",
+    colorDark: "#539e43",
     bgLight: "rgba(21, 128, 61, 0.09)",
-    bgDark: "rgba(74, 222, 128, 0.12)",
+    bgDark: "rgba(83, 158, 67, 0.12)",
     borderLight: "rgba(21, 128, 61, 0.28)",
-    borderDark: "rgba(74, 222, 128, 0.32)",
-    glow: "rgba(74, 222, 128, 0.28)",
+    borderDark: "rgba(83, 158, 67, 0.32)",
+    glow: "rgba(83, 158, 67, 0.28)",
     icon: (c) => (
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8">
-        <path d="M12 2l9 5v10l-9 5-9-5V7l9-5z" />
-        <path d="M12 12l9-5M12 12v10M12 12L3 7" strokeWidth="1.4" />
+      <svg width="13" height="13" viewBox="0 0 256 289" fill={c}>
+        <path d="M128 288.46c-3.98 0-7.69-1.06-11.13-2.91l-35.25-20.94c-5.3-2.92-2.65-3.98-1.06-4.51 7.16-2.39 8.48-2.92 15.9-7.16.8-.53 1.86-.27 2.65.26l27.03 16.17c1.06.53 2.39.53 3.18 0l105.74-61.22c1.06-.53 1.59-1.59 1.59-2.91V83.08c0-1.32-.53-2.38-1.59-2.91L129.33 19.21c-1.06-.53-2.39-.53-3.18 0L20.41 80.17c-1.06.53-1.59 1.86-1.59 2.91v122.17c0 1.06.53 2.39 1.59 2.92l28.89 16.7c15.63 7.95 25.44-1.33 25.44-10.6V93.68c0-1.59 1.33-3.18 3.18-3.18h13.52c1.59 0 3.18 1.33 3.18 3.18v120.58c0 20.94-11.4 33.13-31.27 33.13-6.1 0-10.87 0-24.38-6.63L11.13 224.86C4.24 220.89 0 213.47 0 205.52V83.35C0 75.4 4.24 67.98 11.13 64L116.87 2.78c6.63-3.71 15.64-3.71 22.26 0L244.87 64c6.89 3.98 11.13 11.4 11.13 19.35v122.17c0 7.95-4.24 15.37-11.13 19.35l-105.74 61.22c-3.44 1.59-7.42 2.37-11.13 2.37z" />
+      </svg>
+    ),
+  },
+  "Vue.js": {
+    colorLight: "#0f766e",
+    colorDark: "#41b883",
+    bgLight: "rgba(15, 118, 110, 0.09)",
+    bgDark: "rgba(65, 184, 131, 0.12)",
+    borderLight: "rgba(15, 118, 110, 0.28)",
+    borderDark: "rgba(65, 184, 131, 0.32)",
+    glow: "rgba(65, 184, 131, 0.28)",
+    icon: (c) => (
+      <svg width="13" height="13" viewBox="0 0 128 128" fill="none">
+        <path d="M25.997 9.393l23.002.009L64.035 34.36 79.018 9.404 102 9.398 64.15 75.053z" fill="#35495e" />
+        <path d="M.91 9.569l25.067-.172 38.15 65.659L101.98 9.401l25.11.026-62.966 108.06z" fill={c} />
+      </svg>
+    ),
+  },
+  NestJS: {
+    colorLight: "#be123c",
+    colorDark: "#e0234e",
+    bgLight: "rgba(190, 18, 60, 0.09)",
+    bgDark: "rgba(224, 35, 78, 0.12)",
+    borderLight: "rgba(190, 18, 60, 0.28)",
+    borderDark: "rgba(224, 35, 78, 0.32)",
+    glow: "rgba(224, 35, 78, 0.28)",
+    icon: (c) => (
+      <svg width="13" height="13" viewBox="0 0 128 128" fill={c}>
+        <path d="M75.323.4c-.898 0-1.796.199-2.594.498 1.696 1.098 2.594 2.594 3.093 4.29 0 .2.1.4.1.599 0 .2.1.399.1.598.1 2.894-.799 3.293-1.397 4.989-.998 2.194-.698 4.589.499 6.484.1.2.2.5.399.699-1.297-8.38 5.686-9.578 6.983-12.172.1-2.294-1.795-3.79-3.292-4.888C77.718.599 76.52.399 75.324.399z" />
       </svg>
     ),
   },
@@ -349,7 +377,12 @@ export default function StackBadge({ name }: { name: string }) {
 
   return (
     <motion.li
-      whileHover={{ scale: 1.05, y: -1 }}
+      initial="idle"
+      whileHover="hover"
+      variants={{
+        idle: { scale: 1, y: 0 },
+        hover: { scale: 1.05, y: -1 },
+      }}
       whileTap={{ scale: 0.96 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
       style={{
@@ -378,7 +411,13 @@ export default function StackBadge({ name }: { name: string }) {
           "background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease",
       }}
     >
-      <span
+      <motion.span
+        variants={{
+          hover: {
+            rotate: [0, -14, 12, -10, 8, -4, 2, 0],
+            transition: { duration: 0.55, ease: "easeInOut" },
+          },
+        }}
         style={{
           display: "flex",
           alignItems: "center",
@@ -388,7 +427,7 @@ export default function StackBadge({ name }: { name: string }) {
         aria-hidden="true"
       >
         {meta.icon(textColor)}
-      </span>
+      </motion.span>
       <span>{name}</span>
     </motion.li>
   );

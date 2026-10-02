@@ -146,6 +146,17 @@ em, i {
   }
 }
 
+@keyframes tooltipFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* ── Row hover ──────────────────────────────────────────────────────
    Painted by a pseudo-element inset past the row on both sides, so the
    tint reads as a band with a little air around the text without any
