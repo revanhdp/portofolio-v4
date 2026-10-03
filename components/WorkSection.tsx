@@ -38,7 +38,7 @@ function WorkItem({ work }: WorkItemProps) {
           display: "flex",
           alignItems: "center",
           gap: "10px",
-          padding: "10px 0",
+          padding: "7px 0",
           background: "none",
           border: "none",
           borderRadius: 0,
@@ -132,7 +132,7 @@ export default function WorkSection() {
           alignItems: "center",
           justifyContent: "space-between",
           gap: "12px",
-          marginBottom: "8px",
+          marginBottom: "6px",
         }}
       >
         <p style={{ fontSize: "14px", color: "var(--muted)" }}>Work</p>

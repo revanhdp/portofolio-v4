@@ -10,7 +10,7 @@ import PageWrapper from "@/components/PageWrapper";
 import WorkSection from "@/components/WorkSection";
 import SoundToggle from "@/components/SoundToggle";
 import { InlineExpand } from "@/components/InlineExpand";
-import { linkSound } from "@/lib/sound";
+import { linkSound, triggerHaptic, playHover } from "@/lib/sound";
 
 export default function HomePage() {
   const [hasScrolled, setHasScrolled] = useState(false);
@@ -24,57 +24,59 @@ export default function HomePage() {
   }, [scrollY]);
 
   return (
-    <PageWrapper>
-      {/* ── Hero Stage: Focused Welcome Greeting on Mobile ── */}
+    <PageWrapper isHome>
+      {/* ── Hero Stage: Focused Welcome Greeting on Mobile (Exact 100svh fit) ── */}
       <div className="hero-stage">
-        {/* Victory Hand interactive SVG */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          <VictoryHand />
-        </motion.div>
+        <div>
+          {/* Victory Hand interactive SVG */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            <VictoryHand />
+          </motion.div>
 
-        {/* Name & Typewriter block */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.35,
-            delay: 0.06,
-            ease: [0.25, 0.46, 0.45, 0.94],
-          }}
-          style={{ marginBottom: "8px" }}
-        >
-          <h1
-            style={{
-              fontSize: "16px",
-              fontWeight: 500,
-              color: "var(--foreground)",
-              lineHeight: 1.4,
-              marginTop: "12px",
-              marginBottom: "2px",
+          {/* Name & Typewriter block */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.35,
+              delay: 0.06,
+              ease: [0.25, 0.46, 0.45, 0.94],
             }}
+            style={{ marginBottom: "8px" }}
           >
-            <Greeting />
-          </h1>
-          <p
-            style={{
-              fontSize: "16px",
-              color: "var(--muted)",
-              lineHeight: 1.4,
-            }}
-          >
-            You can call me &ldquo;Revan&rdquo;
-          </p>
-        </motion.div>
+            <h1
+              style={{
+                fontSize: "16px",
+                fontWeight: 500,
+                color: "var(--foreground)",
+                lineHeight: 1.4,
+                marginTop: "8px",
+                marginBottom: "2px",
+              }}
+            >
+              <Greeting />
+            </h1>
+            <p
+              style={{
+                fontSize: "16px",
+                color: "var(--muted)",
+                lineHeight: 1.4,
+              }}
+            >
+              You can call me &ldquo;Revan&rdquo;
+            </p>
+          </motion.div>
+        </div>
 
         {/* Mobile-only scroll cue: fades out immediately upon scrolling */}
         <motion.button
           type="button"
           animate={{
-            opacity: hasScrolled ? 0 : 0.7,
+            opacity: hasScrolled ? 0 : 0.75,
             y: hasScrolled ? 6 : [0, 4, 0],
           }}
           transition={{
@@ -82,11 +84,13 @@ export default function HomePage() {
             y: { repeat: Infinity, duration: 2.2, ease: "easeInOut" },
           }}
           onClick={() => {
+            triggerHaptic("selection");
             window.scrollTo({
               top: window.innerHeight,
               behavior: "smooth",
             });
           }}
+          onMouseEnter={playHover}
           className="scroll-cue hover-foreground"
           aria-hidden={hasScrolled}
           tabIndex={hasScrolled ? -1 : 0}
@@ -98,9 +102,10 @@ export default function HomePage() {
 
       {/* ── Bio: Staggered cinematic optical blur-to-focus reveal on scroll ── */}
       <motion.div
+        className="bio-section"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-30px" }}
+        viewport={{ once: true }}
         variants={{
           hidden: {},
           visible: {
@@ -108,15 +113,6 @@ export default function HomePage() {
               staggerChildren: 0.18,
             },
           },
-        }}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "12px",
-          fontSize: "16px",
-          lineHeight: 1.625,
-          color: "var(--foreground)",
-          marginBottom: "28px",
         }}
       >
         <motion.p
@@ -207,29 +203,21 @@ export default function HomePage() {
 
       {/* ── Work Section: Reveals on scroll with smooth blur ── */}
       <motion.div
-        initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+        initial={{ opacity: 0, y: 16, filter: "blur(6px)" }}
         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        viewport={{ once: true, margin: "-30px" }}
-        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <WorkSection />
       </motion.div>
 
       {/* ── Bottom links: Reveals on scroll with smooth blur ── */}
       <motion.div
-        initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+        className="bottom-links-section"
+        initial={{ opacity: 0, y: 16, filter: "blur(6px)" }}
         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        viewport={{ once: true, margin: "-30px" }}
-        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-        style={{
-          marginTop: "32px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "8px",
-          fontSize: "16px",
-          lineHeight: 1.625,
-          color: "var(--foreground)",
-        }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <p>
           Read my{" "}

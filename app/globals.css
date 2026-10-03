@@ -202,21 +202,49 @@ em, i {
   }
 }
 
+/* Home desktop & laptop container: fits within 100vh when unexpanded without excess */
+@media (min-width: 640px) {
+  .main-wrapper-home {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .home-container {
+    padding-top: clamp(24px, 3.2vh, 44px) !important;
+    padding-bottom: clamp(24px, 3.2vh, 44px) !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+}
+
+/* Home mobile container: 0 top padding so hero-stage is exact 100svh without excess */
+@media (max-width: 639px) {
+  .home-container {
+    padding-top: 0 !important;
+  }
+}
+
 /* ── Hero stage (mobile-first greeting focus) ── */
 .hero-stage {
-  min-height: calc(100svh - 56px);
+  height: 100vh;
+  height: 100svh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
-  margin-bottom: 32px;
+  margin-bottom: 0;
+  box-sizing: border-box;
 }
 @media (min-width: 640px) {
   .hero-stage {
-    min-height: auto;
+    height: auto !important;
+    min-height: auto !important;
     display: block;
     justify-content: flex-start;
-    margin-bottom: 0;
+    margin-bottom: clamp(12px, 1.8vh, 18px);
   }
 }
 
@@ -227,7 +255,6 @@ em, i {
   font-size: 12px;
   color: var(--muted);
   letter-spacing: 0.02em;
-  margin-top: 24px;
   cursor: pointer;
   width: fit-content;
   user-select: none;
@@ -237,9 +264,57 @@ em, i {
   padding: 0;
   font-family: inherit;
 }
+@media (max-width: 639px) {
+  .scroll-cue {
+    position: absolute;
+    bottom: 28px;
+    left: 0;
+    margin-top: 0;
+  }
+}
 @media (min-width: 640px) {
   .scroll-cue {
     display: none !important;
+  }
+}
+
+/* ── Bio section spacing ── */
+.bio-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 16px;
+  line-height: 1.625;
+  color: var(--foreground);
+  margin-bottom: 24px;
+  padding-top: 0;
+}
+@media (max-width: 639px) {
+  .bio-section {
+    padding-top: 36px;
+  }
+}
+@media (min-width: 640px) {
+  .bio-section {
+    gap: clamp(8px, 1.2vh, 11px);
+    margin-bottom: clamp(14px, 2vh, 20px);
+    line-height: 1.58;
+  }
+}
+
+/* ── Bottom links spacing ── */
+.bottom-links-section {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(5px, 0.8vh, 8px);
+  margin-top: clamp(14px, 2vh, 20px);
+  font-size: 16px;
+  line-height: 1.625;
+  color: var(--foreground);
+}
+@media (min-width: 640px) {
+  .bottom-links-section {
+    line-height: 1.58;
   }
 }
 
@@ -312,5 +387,33 @@ em, i {
 
 .top-scroll-blur.is-scrolled .top-scroll-blur-border {
   opacity: 0.65;
+}
+
+/* ── Lenis Smooth Scrolling ── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ── View Transitions API (Circular Theme Ripple) ── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 9999;
 }
 

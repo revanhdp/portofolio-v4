@@ -55,7 +55,7 @@ export default function SoundToggle() {
         padding: "6px 0",
         touchAction: "manipulation",
         cursor: "pointer",
-        marginTop: "16px",
+        marginTop: "10px",
         font: "inherit",
         letterSpacing: "inherit",
         transition: "color 0.15s",

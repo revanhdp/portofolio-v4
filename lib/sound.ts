@@ -87,15 +87,41 @@ function cue(play: () => void): void {
   play();
 }
 
+/* ── Haptic feedback (Vibration API for mobile) ─────────────────── */
+
+export type HapticStrength = "light" | "medium" | "heavy" | "selection";
+
+export function triggerHaptic(type: HapticStrength = "light"): void {
+  if (typeof window === "undefined" || !("vibrate" in navigator)) return;
+  try {
+    switch (type) {
+      case "light":
+        navigator.vibrate(8);
+        break;
+      case "medium":
+        navigator.vibrate(16);
+        break;
+      case "heavy":
+        navigator.vibrate(28);
+        break;
+      case "selection":
+        navigator.vibrate([8, 24, 12]);
+        break;
+    }
+  } catch {}
+}
+
 /* ── Victory hand ── */
 
 export function playHandFold(): void {
+  triggerHaptic("medium");
   cue(() =>
     tone({ freq: 659.25, toFreq: 494, gain: 0.06, duration: 0.1 })
   );
 }
 
 export function playHandUnfurl(): void {
+  triggerHaptic("medium");
   cue(() =>
     [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) =>
       tone({ freq, gain: 0.04, duration: 0.08, delay: i * 0.05 })
@@ -106,6 +132,7 @@ export function playHandUnfurl(): void {
 /* ── Disclosure (accordion rows, inline expands) ── */
 
 export function playExpand(): void {
+  triggerHaptic("light");
   cue(() => {
     tone({ freq: 587.33, gain: 0.035, duration: 0.06 });
     tone({ freq: 880, gain: 0.03, duration: 0.07, delay: 0.045 });
@@ -113,6 +140,7 @@ export function playExpand(): void {
 }
 
 export function playCollapse(): void {
+  triggerHaptic("light");
   cue(() => {
     tone({ freq: 880, gain: 0.03, duration: 0.06 });
     tone({ freq: 587.33, gain: 0.035, duration: 0.07, delay: 0.045 });
@@ -122,10 +150,12 @@ export function playCollapse(): void {
 /* ── Pointer feedback ── */
 
 export function playClick(): void {
+  triggerHaptic("light");
   cue(() => tone({ freq: 740, toFreq: 660, gain: 0.035, duration: 0.06 }));
 }
 
 export function playNav(): void {
+  triggerHaptic("light");
   cue(() => {
     tone({ freq: 659.25, gain: 0.035, duration: 0.07 });
     tone({ freq: 987.77, gain: 0.028, duration: 0.09, delay: 0.055 });

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useTheme } from "next-themes";
 import { TECH_ICONS, defaultTechIcon } from "@/components/techIconsRegistry";
-import { playHover } from "@/lib/sound";
+import { playHover, triggerHaptic } from "@/lib/sound";
 
 export interface TechStackItemProps {
   name: string;
@@ -52,6 +52,7 @@ export default function TechStackItem({
   };
 
   const handleClick = () => {
+    triggerHaptic("medium");
     handleMouseEnter();
     // On touch devices (or mobile tap), auto-settle the wobble after it completes
     if (typeof window !== "undefined" && window.matchMedia("(hover: none)").matches) {

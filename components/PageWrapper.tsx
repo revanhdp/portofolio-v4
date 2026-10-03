@@ -10,16 +10,19 @@ interface PageWrapperProps {
   children: React.ReactNode;
   showBack?: boolean;
   maxWidth?: string;
+  isHome?: boolean;
 }
 
 export default function PageWrapper({
   children,
   showBack = false,
   maxWidth = "640px",
+  isHome = false,
 }: PageWrapperProps) {
   return (
     <Tooltip.Provider delayDuration={120} skipDelayDuration={300}>
       <main
+        className={`main-wrapper ${isHome ? "main-wrapper-home" : ""}`}
         style={{
           minHeight: "100vh",
           backgroundColor: "var(--background)",
@@ -28,7 +31,7 @@ export default function PageWrapper({
       >
       {/* Modern responsive container */}
       <div
-        className="main-container"
+        className={`main-container ${isHome ? "home-container" : ""}`}
         style={{
           maxWidth,
         }}

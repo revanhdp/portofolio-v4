@@ -2,8 +2,9 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { flushSync } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { playHover, playThemeSwitch } from "@/lib/sound";
+import { playHover, playThemeSwitch, triggerHaptic } from "@/lib/sound";
 
 // Clean Sun Icon: pure warm golden yellow
 function SunIcon({ size = 17 }: { size?: number }) {
@@ -84,9 +85,100 @@ export default function ThemeToggle() {
 
   const isDark = resolvedTheme === "dark";
 
-  const toggleTheme = () => {
+  const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
+    triggerHaptic("selection");
     playThemeSwitch(!isDark);
-    setTheme(isDark ? "light" : "dark");
+
+    const nextTheme = isDark ? "light" : "dark";
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    // Support circular view transition if browser supports it
+    const doc = document as unknown as {
+      startViewTransition?: (cb: () => void) => { ready: Promise<void> };
+    };
+
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!doc.startViewTransition || prefersReducedMotion) {
+      if (!prefersReducedMotion && typeof document !== "undefined") {
+        // Fallback expanding circular ripple for browsers without native View Transitions API
+        const ripple = document.createElement("div");
+        ripple.style.position = "fixed";
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        ripple.style.width = "0px";
+        ripple.style.height = "0px";
+        ripple.style.borderRadius = "50%";
+        ripple.style.transform = "translate(-50%, -50%)";
+        ripple.style.backgroundColor =
+          nextTheme === "dark" ? "#09090b" : "#fafafa";
+        ripple.style.pointerEvents = "none";
+        ripple.style.zIndex = "99999";
+        ripple.style.transition =
+          "width 0.45s cubic-bezier(0.22, 1, 0.36, 1), height 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease 0.38s";
+        document.body.appendChild(ripple);
+
+        requestAnimationFrame(() => {
+          const maxDim = endRadius * 2.2;
+          ripple.style.width = `${maxDim}px`;
+          ripple.style.height = `${maxDim}px`;
+        });
+
+        setTimeout(() => {
+          setTheme(nextTheme);
+          ripple.style.opacity = "0";
+          setTimeout(() => {
+            ripple.remove();
+          }, 220);
+        }, 360);
+        return;
+      }
+
+      setTheme(nextTheme);
+      return;
+    }
+
+    const transition = doc.startViewTransition(() => {
+      flushSync(() => {
+        setTheme(nextTheme);
+      });
+      // Synchronously toggle class on html root for accurate View Transition snapshot
+      if (nextTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    });
+
+    transition.ready
+      .then(() => {
+        const clipPath = [
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${endRadius}px at ${x}px ${y}px)`,
+        ];
+        document.documentElement.animate(
+          {
+            clipPath,
+          },
+          {
+            duration: 480,
+            easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+            pseudoElement: "::view-transition-new(root)",
+          }
+        );
+      })
+      .catch(() => {
+        // Fallback silently if aborted
+      });
   };
 
   return (
