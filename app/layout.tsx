@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import ThemeToggle from "@/components/ThemeToggle";
+import SettingsMenu from "@/components/SettingsMenu";
 import TopScrollBlur from "@/components/TopScrollBlur";
 import SmoothScroll from "@/components/SmoothScroll";
 import NoiseOverlay from "@/components/NoiseOverlay";
@@ -64,7 +64,7 @@ export default function RootLayout({
             <NoiseOverlay />
             <TopScrollBlur />
             {children}
-            <ThemeToggle />
+            <SettingsMenu />
           </SmoothScroll>
         </ThemeProvider>
       </body>

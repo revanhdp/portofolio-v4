@@ -9,8 +9,10 @@ import {
   playSoundOn,
   setSoundEnabled,
 } from "@/lib/sound";
+import { useLanguage } from "@/lib/i18n";
 
 export default function SoundToggle() {
+  const { t } = useLanguage();
   const [soundOn, setSoundOn] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -61,7 +63,7 @@ export default function SoundToggle() {
         transition: "color 0.15s",
       }}
       className="hover-foreground"
-      aria-label={soundOn ? "Turn sound off" : "Turn sound on"}
+      aria-label={soundOn ? t.sound.turnOff : t.sound.turnOn}
     >
       {/* Speaker icon SVG */}
       <motion.span
@@ -87,7 +89,7 @@ export default function SoundToggle() {
           </svg>
         )}
       </motion.span>
-      <span>{soundOn ? "Sound on" : "Sound off"}</span>
+      <span>{soundOn ? t.sound.on : t.sound.off}</span>
     </motion.button>
   );
 }

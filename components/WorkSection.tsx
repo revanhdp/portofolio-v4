@@ -4,7 +4,10 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { works } from "@/lib/data";
+import { useLanguage } from "@/lib/i18n";
+import type { WorkExperience } from "@/lib/data";
+import type { CWork } from "@/lib/types";
+import { localizeWork } from "@/lib/localize";
 import { linkSound, playCollapse, playExpand, playHover } from "@/lib/sound";
 import WorkProjectRow from "@/components/WorkProjectRow";
 import CompanyBadge from "@/components/CompanyBadge";
@@ -13,7 +16,7 @@ import CompanyBadge from "@/components/CompanyBadge";
 const PREVIEW_COUNT = 3;
 
 interface WorkItemProps {
-  work: (typeof works)[0];
+  work: WorkExperience;
 }
 
 function WorkItem({ work }: WorkItemProps) {
@@ -122,7 +125,8 @@ function WorkItem({ work }: WorkItemProps) {
   );
 }
 
-export default function WorkSection() {
+export default function WorkSection({ works }: { works: CWork[] }) {
+  const { t, lang } = useLanguage();
   return (
     <section>
       {/* Label row doubles as the entry point to the full history */}
@@ -135,7 +139,7 @@ export default function WorkSection() {
           marginBottom: "6px",
         }}
       >
-        <p style={{ fontSize: "14px", color: "var(--muted)" }}>Work</p>
+        <p style={{ fontSize: "14px", color: "var(--muted)" }}>{t.home.workLabel}</p>
         <Link
           href="/work"
           {...linkSound}
@@ -149,12 +153,12 @@ export default function WorkSection() {
           }}
           className="hover-foreground"
         >
-          <span>All work</span>
+          <span>{t.nav.allWork}</span>
           <ArrowRight size={12} strokeWidth={1.75} />
         </Link>
       </div>
       <div>
-        {works.slice(0, PREVIEW_COUNT).map((work) => (
+        {works.slice(0, PREVIEW_COUNT).map((raw) => localizeWork(raw, lang)).map((work) => (
           <WorkItem key={work.id} work={work} />
         ))}
       </div>

@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ProjectImage } from "@/lib/data";
 import { playClick } from "@/lib/sound";
+import { useLanguage } from "@/lib/i18n";
 
 interface ProjectImageFrameProps {
   images: ProjectImage[];
@@ -17,6 +18,7 @@ export default function ProjectImageFrame({
   images,
   windowTitle = "app.preview",
 }: ProjectImageFrameProps) {
+  const { t } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [loaded, setLoaded] = useState<Record<number, boolean>>({});
@@ -135,7 +137,7 @@ export default function ProjectImageFrame({
           lineHeight: 1.5,
         }}
       >
-        Tap a screen to view it in full.
+        {t.projects.screensHint}
       </p>
 
       {/* ── Fullscreen Minimalist Lightbox Modal with Multi-Slide Navigation ── */}

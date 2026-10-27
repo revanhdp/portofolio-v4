@@ -8,11 +8,13 @@ import PageWrapper from "@/components/PageWrapper";
 import GithubIcon from "@/components/GithubIcon";
 import TechStackItem from "@/components/TechStackItem";
 import ProjectImageFrame from "@/components/ProjectImageFrame";
-import type { Project } from "@/lib/data";
+import type { CProject } from "@/lib/types";
+import { localizeProject } from "@/lib/localize";
 import { linkSound } from "@/lib/sound";
+import { useLanguage } from "@/lib/i18n";
 
 interface Props {
-  project: Project;
+  project: CProject;
 }
 
 const fadeUp = (delay = 0) => ({
@@ -38,7 +40,9 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function ProjectDetail({ project }: Props) {
+export default function ProjectDetail({ project: raw }: Props) {
+  const { t, lang } = useLanguage();
+  const project = localizeProject(raw, lang);
   const hasImages = (project.images?.length ?? 0) > 0;
 
   return (
@@ -132,7 +136,7 @@ export default function ProjectDetail({ project }: Props) {
                 }}
               >
                 <GithubIcon size={12} />
-                <span>Source</span>
+                <span>{t.projects.source}</span>
               </a>
             )}
           </div>
@@ -141,7 +145,7 @@ export default function ProjectDetail({ project }: Props) {
 
       {/* Overview */}
       <motion.section {...fadeUp(0.06)} style={{ marginTop: "32px" }}>
-        <SectionHeading>Overview</SectionHeading>
+        <SectionHeading>{t.projects.overview}</SectionHeading>
         <div
           style={{
             display: "flex",
@@ -160,7 +164,7 @@ export default function ProjectDetail({ project }: Props) {
 
       {/* Tech stack — interactive floating icons with wobble & enlarge */}
       <motion.section {...fadeUp(0.12)} style={{ marginTop: "32px" }}>
-        <SectionHeading>Stack</SectionHeading>
+        <SectionHeading>{t.projects.stack}</SectionHeading>
         <div
           className="flex flex-wrap items-center gap-2.5 sm:gap-3.5"
           style={{
@@ -177,7 +181,7 @@ export default function ProjectDetail({ project }: Props) {
 
       {/* Highlights */}
       <motion.section {...fadeUp(0.18)} style={{ marginTop: "32px" }}>
-        <SectionHeading>What I built</SectionHeading>
+        <SectionHeading>{t.projects.built}</SectionHeading>
         <ul
           style={{
             fontSize: "15px",
@@ -199,7 +203,7 @@ export default function ProjectDetail({ project }: Props) {
       {/* Gallery — omitted entirely when the project has no screenshots */}
       {hasImages && (
         <motion.section {...fadeUp(0.24)} style={{ marginTop: "32px" }}>
-          <SectionHeading>Screens</SectionHeading>
+          <SectionHeading>{t.projects.screens}</SectionHeading>
           <ProjectImageFrame
             images={project.images!}
             windowTitle={`${project.id}.app`}
@@ -235,7 +239,7 @@ export default function ProjectDetail({ project }: Props) {
           >
             <ArrowLeft size={12} strokeWidth={1.75} />
           </span>
-          <span>All projects</span>
+          <span>{t.nav.allProjects}</span>
         </Link>
       </div>
     </PageWrapper>

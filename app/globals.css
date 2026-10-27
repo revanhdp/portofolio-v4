@@ -318,8 +318,8 @@ em, i {
   }
 }
 
-/* Fixed theme toggle position */
-.theme-toggle-btn {
+/* Fixed settings menu position */
+.settings-menu {
   position: fixed;
   top: 14px;
   right: 14px;
@@ -327,7 +327,7 @@ em, i {
   touch-action: manipulation;
 }
 @media (min-width: 640px) {
-  .theme-toggle-btn {
+  .settings-menu {
     top: 24px;
     right: 24px;
   }

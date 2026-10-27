@@ -2,13 +2,18 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
+import { useSetting } from "@/lib/settings";
 
 export default function SmoothScroll({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const enabled = useSetting("smoothScroll");
+
   useEffect(() => {
+    if (!enabled) return;
+
     // Respect reduced motion settings
     if (
       typeof window !== "undefined" &&
@@ -37,7 +42,7 @@ export default function SmoothScroll({
       cancelAnimationFrame(rafId);
       lenis.destroy();
     };
-  }, []);
+  }, [enabled]);
 
   return <>{children}</>;
 }

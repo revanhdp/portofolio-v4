@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { greetings } from "@/lib/data";
+import { useLanguage } from "@/lib/i18n";
 
 // Typewriter timings, in ms.
 const TYPE = 85;
@@ -11,6 +12,7 @@ const HOLD = 1800;
 const PAUSE = 400;
 
 export default function Greeting() {
+  const { t } = useLanguage();
   // Starts on the full first greeting so SSR and no-JS render a
   // complete sentence — the cycle begins by erasing it.
   const [index, setIndex] = useState(0);
@@ -53,7 +55,7 @@ export default function Greeting() {
   return (
     <>
       {/* Stable sentence for screen readers — the animated copy is decorative. */}
-      <span className="sr-only">Hello, I&apos;m Revanza Hadi Putra.</span>
+      <span className="sr-only">{t.home.greetingSr}</span>
 
       {/* The greeting gets its own line so the introduction below never
           moves. Nothing reflows as the word grows and shrinks. */}

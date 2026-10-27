@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { linkSound } from "@/lib/sound";
+import { useLanguage } from "@/lib/i18n";
 
 interface PageWrapperProps {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ export default function PageWrapper({
   maxWidth = "640px",
   isHome = false,
 }: PageWrapperProps) {
+  const { t } = useLanguage();
   return (
     <Tooltip.Provider delayDuration={120} skipDelayDuration={300}>
       <main
@@ -63,7 +65,7 @@ export default function PageWrapper({
               >
                 <ArrowLeft size={12} strokeWidth={1.75} />
               </span>
-              <span>Index</span>
+              <span>{t.nav.index}</span>
             </Link>
           </motion.div>
         )}

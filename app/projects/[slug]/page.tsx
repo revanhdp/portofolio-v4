@@ -1,9 +1,9 @@
-import { projects, archivedProjects } from "@/lib/data";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { getProject } from "@/lib/content";
 import ProjectDetail from "./ProjectDetail";
-import { Metadata } from "next";
 
-const allProjects = [...projects, ...archivedProjects];
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -11,21 +11,17 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const project = allProjects.find((p) => p.id === slug);
+  const project = await getProject(slug);
   if (!project) return {};
   return {
     title: `${project.name} — Revanza Hadi Putra`,
-    description: project.description,
+    description: project.description.en,
   };
-}
-
-export async function generateStaticParams() {
-  return allProjects.map((project) => ({ slug: project.id }));
 }
 
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
-  const project = allProjects.find((p) => p.id === slug);
+  const project = await getProject(slug);
 
   if (!project) {
     notFound();
