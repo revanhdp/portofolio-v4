@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { ProjectImage } from "@/lib/data";
 import { playClick } from "@/lib/sound";
 
@@ -18,7 +19,7 @@ export default function ProjectImageFrame({
 }: ProjectImageFrameProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const [loaded, setLoaded] = useState<Record<number, boolean>>({});
   const touchStartX = useRef<number | null>(null);
 
   const total = images.length;
@@ -85,8 +86,9 @@ export default function ProjectImageFrame({
     touchStartX.current = null;
   };
 
-  const openLightbox = () => {
+  const openLightbox = (index: number) => {
     playClick();
+    setCurrentIndex(index);
     setIsOpen(true);
   };
 
@@ -99,324 +101,42 @@ export default function ProjectImageFrame({
 
   return (
     <figure style={{ width: "100%", margin: 0 }}>
-      {/* ── Minimalist App Window Frame (Fixed 1 Consistent Div) ── */}
-      <div
-        onClick={openLightbox}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        style={{
-          width: "100%",
-          borderRadius: "10px",
-          border: "1px solid var(--border)",
-          backgroundColor: "var(--card)",
-          overflow: "hidden",
-          cursor: "zoom-in",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.03)",
-          transition: "border-color 0.2s ease, box-shadow 0.2s ease",
-          position: "relative",
-        }}
-        className="group hover:border-[var(--muted)]"
-        title="Click to view full screen (or use arrows to browse)"
-      >
-        {/* Micro Title Bar */}
-        <div
-          style={{
-            height: "30px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "0 10px",
-            borderBottom: "1px solid var(--border)",
-            backgroundColor: "var(--card)",
-            userSelect: "none",
-          }}
-        >
-          {/* Left: Window traffic dots */}
-          <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-            <span
-              style={{
-                width: "7px",
-                height: "7px",
-                borderRadius: "50%",
-                backgroundColor: "rgba(239, 68, 68, 0.7)",
-              }}
-            />
-            <span
-              style={{
-                width: "7px",
-                height: "7px",
-                borderRadius: "50%",
-                backgroundColor: "rgba(245, 158, 11, 0.7)",
-              }}
-            />
-            <span
-              style={{
-                width: "7px",
-                height: "7px",
-                borderRadius: "50%",
-                backgroundColor: "rgba(16, 185, 129, 0.7)",
-              }}
-            />
-          </div>
-
-          {/* Center: Window address */}
-          <span
-            style={{
-              fontSize: "11px",
-              color: "var(--muted)",
-              fontFamily: "var(--font-geist-mono), monospace",
-              letterSpacing: "0.02em",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              maxWidth: "180px",
-            }}
+      {/* Thumbnail grid — each tile shows a skeleton until its image has loaded */}
+      <div className="grid w-full grid-cols-3 gap-2">
+        {images.map((image, i) => (
+          <button
+            key={`${image.src}-${i}`}
+            type="button"
+            onClick={() => openLightbox(i)}
+            title={image.caption}
+            aria-label={`View screen ${i + 1} of ${total}: ${image.caption}`}
+            className="group relative aspect-square w-full cursor-zoom-in overflow-hidden rounded-md border border-border bg-card p-0 transition-colors hover:border-muted"
           >
-            {windowTitle}
-          </span>
-
-          {/* Right: Controls (Arrows if multi-image + Maximize Icon) */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              color: "var(--muted)",
-            }}
-          >
-            {total > 1 && (
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "2px",
-                  padding: "1px 4px",
-                  borderRadius: "6px",
-                  backgroundColor: "rgba(0, 0, 0, 0.04)",
-                  border: "1px solid var(--border)",
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  type="button"
-                  onClick={prevImage}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "16px",
-                    height: "16px",
-                    background: "none",
-                    border: "none",
-                    color: "var(--foreground)",
-                    cursor: "pointer",
-                    padding: 0,
-                    borderRadius: "3px",
-                  }}
-                  title="Previous (←)"
-                  aria-label="Previous screen"
-                >
-                  <ChevronLeft size={12} strokeWidth={2} />
-                </button>
-                <span
-                  style={{
-                    fontSize: "10.5px",
-                    fontFamily: "var(--font-geist-mono), monospace",
-                    padding: "0 3px",
-                    color: "var(--muted)",
-                  }}
-                >
-                  {currentIndex + 1}/{total}
-                </span>
-                <button
-                  type="button"
-                  onClick={nextImage}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "16px",
-                    height: "16px",
-                    background: "none",
-                    border: "none",
-                    color: "var(--foreground)",
-                    cursor: "pointer",
-                    padding: 0,
-                    borderRadius: "3px",
-                  }}
-                  title="Next (→)"
-                  aria-label="Next screen"
-                >
-                  <ChevronRight size={12} strokeWidth={2} />
-                </button>
-              </div>
+            {!loaded[i] && (
+              <Skeleton className="absolute inset-0 aspect-square w-full rounded-md" />
             )}
-
-            <Maximize2 size={11} strokeWidth={1.75} />
-          </div>
-        </div>
-
-        {/* Constrained Image Canvas (Strictly contained in 16:10 div) */}
-        <div
-          style={{
-            position: "relative",
-            width: "100%",
-            aspectRatio: "16 / 10",
-            overflow: "hidden",
-            backgroundColor: "var(--card)",
-          }}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={currentIndex}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18, ease: "easeInOut" }}
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <Image
-                src={currentImage.src}
-                alt={currentImage.caption}
-                fill
-                priority
-                sizes="(max-width: 640px) 100vw, 640px"
-                style={{
-                  objectFit: "cover",
-                  objectPosition: "top left",
-                  transform: isHovered ? "scale(1.015)" : "scale(1)",
-                  transition: "transform 0.3s ease",
-                }}
-              />
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Quick floating arrow overlays on hover for multi-image */}
-          {total > 1 && isHovered && (
-            <>
-              <button
-                type="button"
-                onClick={prevImage}
-                style={{
-                  position: "absolute",
-                  left: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  width: "28px",
-                  height: "28px",
-                  borderRadius: "50%",
-                  backgroundColor: "rgba(0, 0, 0, 0.6)",
-                  backdropFilter: "blur(6px)",
-                  border: "1px solid rgba(255, 255, 255, 0.2)",
-                  color: "#ffffff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  zIndex: 2,
-                  transition: "transform 0.15s ease",
-                }}
-                title="Previous"
-              >
-                <ChevronLeft size={14} />
-              </button>
-              <button
-                type="button"
-                onClick={nextImage}
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  width: "28px",
-                  height: "28px",
-                  borderRadius: "50%",
-                  backgroundColor: "rgba(0, 0, 0, 0.6)",
-                  backdropFilter: "blur(6px)",
-                  border: "1px solid rgba(255, 255, 255, 0.2)",
-                  color: "#ffffff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  zIndex: 2,
-                  transition: "transform 0.15s ease",
-                }}
-                title="Next"
-              >
-                <ChevronRight size={14} />
-              </button>
-            </>
-          )}
-
-          {/* Subtle click hint pill on hover */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: "10px",
-              right: "10px",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "4px",
-              padding: "3px 8px",
-              borderRadius: "9999px",
-              backgroundColor: "rgba(0, 0, 0, 0.65)",
-              color: "#ffffff",
-              fontSize: "11px",
-              backdropFilter: "blur(6px)",
-              opacity: isHovered ? 1 : 0,
-              transform: isHovered ? "translateY(0)" : "translateY(4px)",
-              transition: "opacity 0.2s ease, transform 0.2s ease",
-              pointerEvents: "none",
-              zIndex: 3,
-            }}
-          >
-            <span>Click to zoom</span>
-          </div>
-        </div>
+            <Image
+              src={image.src}
+              alt={image.caption}
+              fill
+              sizes="(max-width: 640px) 33vw, 200px"
+              onLoad={() => setLoaded((prev) => ({ ...prev, [i]: true }))}
+              className="object-cover object-top-left transition-transform duration-300 group-hover:scale-[1.04]"
+              style={{ opacity: loaded[i] ? 1 : 0 }}
+            />
+          </button>
+        ))}
       </div>
-
-      {/* Caption below with smooth crossfade */}
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.figcaption
-          key={currentIndex}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
-          style={{
-            fontSize: "13px",
-            color: "var(--muted)",
-            marginTop: "8px",
-            lineHeight: 1.5,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "12px",
-          }}
-        >
-          <span>{currentImage.caption}</span>
-          {total > 1 && (
-            <span
-              style={{
-                fontFamily: "var(--font-geist-mono), monospace",
-                fontSize: "11px",
-                flexShrink: 0,
-                color: "var(--muted)",
-              }}
-            >
-              {currentIndex + 1}/{total}
-            </span>
-          )}
-        </motion.figcaption>
-      </AnimatePresence>
+      <p
+        style={{
+          fontSize: "13px",
+          color: "var(--muted)",
+          marginTop: "8px",
+          lineHeight: 1.5,
+        }}
+      >
+        Tap a screen to view it in full.
+      </p>
 
       {/* ── Fullscreen Minimalist Lightbox Modal with Multi-Slide Navigation ── */}
       <AnimatePresence>

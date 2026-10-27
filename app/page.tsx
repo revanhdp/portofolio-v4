@@ -220,19 +220,17 @@ export default function HomePage() {
         transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <p>
-          Read my{" "}
-          <Link href="/writings" className="link" {...linkSound}>
-            writings
-          </Link>
-          , browse the{" "}
+          {/* Note: writings link temporarily commented out */}
+          {/* Read my <Link href="/writings" className="link" {...linkSound}>writings</Link>, */}
+          Browse the{" "}
           <Link href="/projects" className="link" {...linkSound}>
             projects
           </Link>{" "}
-          I&apos;ve built, or see the{" "}
+          I&apos;ve built, or check out the{" "}
           <Link href="/stack" className="link" {...linkSound}>
             stack
           </Link>{" "}
-          I build with. Wanna discuss a project or just say hi?{" "}
+          I work with. Wanna collaborate, discuss a project, or just say hi?{" "}
           <a
             href="mailto:revanzahadiputra2@gmail.com"
             className="link"

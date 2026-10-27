@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
 import TopScrollBlur from "@/components/TopScrollBlur";
 import SmoothScroll from "@/components/SmoothScroll";
+import NoiseOverlay from "@/components/NoiseOverlay";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -60,6 +61,7 @@ export default function RootLayout({
           disableTransitionOnChange={false}
         >
           <SmoothScroll>
+            <NoiseOverlay />
             <TopScrollBlur />
             {children}
             <ThemeToggle />

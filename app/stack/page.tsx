@@ -1,307 +1,107 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import * as Tooltip from "@radix-ui/react-tooltip";
-import {
-  Database,
-  LayoutTemplate,
-  Server,
-  Terminal,
-  Sparkles,
-  Layers,
-} from "lucide-react";
+import { Layers } from "lucide-react";
 import PageWrapper from "@/components/PageWrapper";
-import TechStackItem from "@/components/TechStackItem";
+import TextShimmer from "@/components/TextShimmer";
+import {
+  IntegrationGrid,
+  type IntegrationGridLogo,
+} from "@/components/ui/integration-grid";
 import { TECH_ICONS } from "@/components/techIconsRegistry";
-import { stack, type StackCategory } from "@/lib/data";
-import { playHover, playExpand } from "@/lib/sound";
+import { stack } from "@/lib/data";
 
-const categoryIcons = {
-  frontend: LayoutTemplate,
-  backend: Server,
-  database: Database,
-  tooling: Terminal,
-} as const;
+// Outer slots fill row by row (7 · 8 · 7). Leave the top corners and the bottom
+// centre empty so the 19 tools sit balanced in the 22 slots.
+const EMPTY_SLOTS = new Set([0, 6, 18]);
+
+const logos: (IntegrationGridLogo | null)[] = (() => {
+  const items = stack.flatMap((c) => c.items);
+  let n = 0;
+  return Array.from({ length: 22 }, (_, i) => {
+    if (EMPTY_SLOTS.has(i)) return null;
+    const item = items[n++];
+    if (!item) return null;
+    const meta = TECH_ICONS[item.name];
+    if (!meta?.iconSrc) return null;
+    return {
+      name: item.name,
+      src: meta.iconSrc,
+      darkSrc: meta.darkIconSrc,
+      invertDark: item.name === "Vercel" || item.name === "Express",
+    };
+  });
+})();
 
 export default function StackPage() {
-  const [selectedFilter, setSelectedFilter] = useState<string>("all");
-  const [activeTech, setActiveTech] = useState<{
-    name: string;
-    note?: string;
-  } | null>(null);
-
-  const filterTabs = [
-    { id: "all", label: "All" },
-    ...stack.map((c) => ({ id: c.id, label: c.label })),
-  ];
-
-  const visibleCategories =
-    selectedFilter === "all"
-      ? stack
-      : stack.filter((c) => c.id === selectedFilter);
-
-  // Active tech icon metadata if hovered
-  const activeMeta = activeTech ? TECH_ICONS[activeTech.name] : null;
-
   return (
-    <Tooltip.Provider delayDuration={120} skipDelayDuration={300}>
-      <PageWrapper showBack>
-        {/* Header */}
-        <div>
-          <h1
+    <PageWrapper showBack>
+      <div>
+        <h1
+          style={{
+            fontSize: "15px",
+            fontWeight: 500,
+            color: "var(--foreground)",
+          }}
+        >
+          Stack
+        </h1>
+        <p
+          style={{
+            fontSize: "15px",
+            color: "var(--muted)",
+            marginTop: "2px",
+          }}
+        >
+          The languages, frameworks, and tools I reach for day to day — chosen
+          for the boring reason that they hold up well in{" "}
+          <em
             style={{
-              fontSize: "15px",
+              fontStyle: "italic",
               fontWeight: 500,
               color: "var(--foreground)",
             }}
           >
-            Stack
-          </h1>
-          <p
-            style={{
-              fontSize: "15px",
-              color: "var(--muted)",
-              marginTop: "2px",
-            }}
-          >
-            The languages, frameworks, and tools I reach for day to day — chosen
-            for the boring reason that they hold up well in{" "}
-            <em
+            <TextShimmer>production</TextShimmer>
+          </em>
+          .
+        </p>
+      </div>
+
+      <div style={{ marginTop: "28px" }}>
+        <IntegrationGrid
+          logos={logos}
+          mark={<Layers size="100%" strokeWidth={1.5} style={{ width: "46%", height: "46%" }} />}
+          label={`Tech stack: ${stack
+            .flatMap((c) => c.items.map((i) => i.name))
+            .join(", ")}`}
+        />
+      </div>
+
+      <div
+        style={{
+          marginTop: "28px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "14px",
+        }}
+      >
+        {stack.map((category) => (
+          <section key={category.id}>
+            <h2
               style={{
-                fontStyle: "italic",
+                fontSize: "13.5px",
                 fontWeight: 500,
                 color: "var(--foreground)",
               }}
             >
-              production
-            </em>
-            .
-          </p>
-        </div>
-
-        {/* ── Category Filter Tabs (Horizontal) ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.05 }}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            marginTop: "22px",
-            overflowX: "auto",
-            paddingBottom: "4px",
-            paddingRight: "12px",
-            WebkitOverflowScrolling: "touch",
-            scrollbarWidth: "none",
-          }}
-        >
-          {filterTabs.map((tab) => {
-            const isActive = selectedFilter === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => {
-                  playExpand();
-                  setSelectedFilter(tab.id);
-                }}
-                onMouseEnter={playHover}
-                style={{
-                  padding: "6px 14px",
-                  borderRadius: "9999px",
-                  fontSize: "13px",
-                  fontWeight: isActive ? 500 : 400,
-                  color: isActive ? "var(--foreground)" : "var(--muted)",
-                  backgroundColor: isActive
-                    ? "var(--card)"
-                    : "transparent",
-                  border: "none",
-                  outline: "none",
-                  cursor: "pointer",
-                  transition:
-                    "color 0.15s ease, background-color 0.15s ease",
-                  whiteSpace: "nowrap",
-                  userSelect: "none",
-                  touchAction: "manipulation",
-                }}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
-        </motion.div>
-
-        {/* ── Interactive Live Spotlight Display Bar (Sticky Glassmorphic) ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-          style={{
-            position: "sticky",
-            top: "12px",
-            zIndex: 20,
-            marginTop: "16px",
-            padding: "10px 16px",
-            borderRadius: "14px",
-            backgroundColor: "color-mix(in srgb, var(--card) 88%, transparent)",
-            backdropFilter: "blur(14px)",
-            WebkitBackdropFilter: "blur(14px)",
-            border: "1px solid color-mix(in srgb, var(--border) 40%, transparent)",
-            boxShadow: "0 4px 20px -2px rgba(0, 0, 0, 0.05)",
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            minHeight: "44px",
-          }}
-        >
-          <AnimatePresence mode="wait">
-            {activeTech ? (
-              <motion.div
-                key={activeTech.name}
-                initial={{ opacity: 0, x: -6 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 6 }}
-                transition={{ duration: 0.15 }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  width: "100%",
-                  fontSize: "13px",
-                  minWidth: 0,
-                }}
-              >
-                <div
-                  style={{
-                    width: "8px",
-                    height: "8px",
-                    borderRadius: "50%",
-                    backgroundColor: activeMeta?.color || "var(--foreground)",
-                    boxShadow: `0 0 8px ${activeMeta?.color || "var(--muted)"}`,
-                    flexShrink: 0,
-                  }}
-                />
-                <span
-                  style={{
-                    fontWeight: 550,
-                    color: "var(--foreground)",
-                    flexShrink: 0,
-                  }}
-                >
-                  {activeTech.name}
-                </span>
-                {activeTech.note && (
-                  <>
-                    <span style={{ color: "var(--muted)", opacity: 0.4, flexShrink: 0 }}>•</span>
-                    <span
-                      style={{
-                        color: "var(--muted)",
-                        fontSize: "12.5px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        minWidth: 0,
-                      }}
-                    >
-                      {activeTech.note}
-                    </span>
-                  </>
-                )}
-              </motion.div>
-            ) : (
-              <motion.div
-                key="idle"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.15 }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  color: "var(--muted)",
-                  fontSize: "13px",
-                }}
-              >
-                <Sparkles size={13} strokeWidth={1.75} style={{ opacity: 0.7, flexShrink: 0 }} />
-                <span>Tap or hover any icon to explore details</span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
-
-        {/* ── Horizontal Stack Shelves (Side-by-Side) ── */}
-        <div style={{ marginTop: "28px", display: "flex", flexDirection: "column", gap: "32px" }}>
-          {visibleCategories.map((category, catIndex) => {
-            const Icon = categoryIcons[category.icon] || Layers;
-            return (
-              <section key={category.id}>
-                {/* Category Heading */}
-                <motion.div
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.25, delay: catIndex * 0.05 }}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "7px",
-                    marginBottom: "12px",
-                  }}
-                >
-                  <span
-                    style={{ color: "var(--muted)", display: "flex" }}
-                    aria-hidden="true"
-                  >
-                    <Icon size={14} strokeWidth={1.75} />
-                  </span>
-                  <h2
-                    style={{
-                      fontSize: "13.5px",
-                      fontWeight: 500,
-                      color: "var(--foreground)",
-                    }}
-                  >
-                    {category.label}
-                  </h2>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      color: "var(--muted)",
-                      marginLeft: "auto",
-                      fontWeight: 400,
-                    }}
-                  >
-                    {category.items.length} tools
-                  </span>
-                </motion.div>
-
-                {/* Horizontal row of interactive wobbling icons */}
-                <div
-                  className="flex flex-wrap items-center gap-2.5 sm:gap-3.5"
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    alignItems: "center",
-                  }}
-                >
-                  {category.items.map((item, itemIndex) => (
-                    <TechStackItem
-                      key={item.name}
-                      name={item.name}
-                      note={item.note}
-                      index={catIndex * 5 + itemIndex}
-                      onHover={(name, note) => setActiveTech({ name, note })}
-                      onLeave={() => setActiveTech(null)}
-                    />
-                  ))}
-                </div>
-              </section>
-            );
-          })}
-        </div>
-      </PageWrapper>
-    </Tooltip.Provider>
+              {category.label}
+            </h2>
+            <p style={{ fontSize: "13px", color: "var(--muted)" }}>
+              {category.items.map((i) => i.name).join(" · ")}
+            </p>
+          </section>
+        ))}
+      </div>
+    </PageWrapper>
   );
 }
