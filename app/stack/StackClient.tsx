@@ -3,6 +3,7 @@
 import { Layers } from "lucide-react";
 import PageWrapper from "@/components/PageWrapper";
 import TextShimmer from "@/components/TextShimmer";
+import SketchTitle from "@/components/SketchTitle";
 import {
   IntegrationGrid,
   type IntegrationGridLogo,
@@ -29,12 +30,15 @@ function buildLogos(stack: StackCategory[]): (IntegrationGridLogo | null)[] {
     const item = items[n++];
     if (!item) return null;
     const meta = TECH_ICONS[item.name] ?? defaultTechIcon;
-    if (!meta.iconSrc) return null;
+    if (!meta.iconSrc && !item.icon) return null;
+    // A custom icon replaces the built-in one, including its dark variant
+    const custom = !!item.icon;
     return {
       name: item.name,
-      src: meta.iconSrc,
-      darkSrc: meta.darkIconSrc,
-      invertDark: item.name === "Vercel" || item.name === "Express",
+      src: item.icon || meta.iconSrc,
+      darkSrc: custom ? item.iconDark || undefined : meta.darkIconSrc,
+      invertDark:
+        !custom && (item.name === "Vercel" || item.name === "Express"),
     };
   });
 }
@@ -54,7 +58,7 @@ export default function StackClient({ data }: { data: CStackCategory[] }) {
             color: "var(--foreground)",
           }}
         >
-          {t.stack.title}
+          <SketchTitle seedKey="stack">{t.stack.title}</SketchTitle>
         </h1>
         <p
           style={{

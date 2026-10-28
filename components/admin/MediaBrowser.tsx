@@ -3,17 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { AlertCircle, Check, Copy, ImageIcon, Trash2, Upload } from "lucide-react";
 import { Spinner } from "./fields";
+import { IMAGE_ACCEPT, uploadImage, type UploadedImage } from "./upload";
 
-export type MediaItem = {
-  id: string;
-  name: string;
-  url: string;
-  originalName: string;
-  size: number;
-  uploadedBy: string;
-};
-
-const ACCEPT = "image/png,image/jpeg,image/gif,image/webp,image/avif";
+export type MediaItem = UploadedImage;
 
 const formatSize = (n: number) =>
   n > 1024 * 1024 ? `${(n / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`;
@@ -58,19 +50,20 @@ export default function MediaBrowser({
     if (!files?.length || busy) return;
     setBusy(true);
     setError(undefined);
+    const uploaded: UploadedImage[] = [];
     for (const file of Array.from(files)) {
-      const body = new FormData();
-      body.set("file", file);
-      const res = await fetch("/api/admin/media", { method: "POST", body });
-      if (!res.ok) {
-        const message = (await res.json().catch(() => null))?.error ?? "Upload failed.";
-        setError(`${file.name}: ${message}`);
+      try {
+        uploaded.push(await uploadImage(file));
+      } catch (err) {
+        setError(`${file.name}: ${err instanceof Error ? err.message : "Upload failed."}`);
         break;
       }
     }
     await reload();
     setBusy(false);
     if (input.current) input.current.value = "";
+    // As a picker, a single fresh upload is chosen right away
+    if (onSelect && uploaded.length === 1 && files.length === 1) onSelect(uploaded[0].url);
   };
 
   const remove = async (item: MediaItem) => {
@@ -91,7 +84,7 @@ export default function MediaBrowser({
         ref={input}
         type="file"
         multiple
-        accept={ACCEPT}
+        accept={IMAGE_ACCEPT}
         hidden
         onChange={(e) => upload(e.target.files)}
       />

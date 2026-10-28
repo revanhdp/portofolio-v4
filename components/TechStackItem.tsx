@@ -11,6 +11,9 @@ export interface TechStackItemProps {
   name: string;
   note?: string;
   index?: number;
+  /** Custom logos from the stack settings, replacing the built-in one. */
+  icon?: string;
+  iconDark?: string;
   onHover?: (name: string, note?: string) => void;
   onLeave?: () => void;
 }
@@ -19,6 +22,8 @@ export default function TechStackItem({
   name,
   note,
   index = 0,
+  icon,
+  iconDark,
   onHover,
   onLeave,
 }: TechStackItemProps) {
@@ -34,11 +39,16 @@ export default function TechStackItem({
   const iconMeta = TECH_ICONS[name] || defaultTechIcon;
 
   // Resolve icon source according to theme
-  const iconSource =
-    isDark && iconMeta.darkIconSrc ? iconMeta.darkIconSrc : iconMeta.iconSrc;
+  const iconSource = icon
+    ? isDark && iconDark
+      ? iconDark
+      : icon
+    : isDark && iconMeta.darkIconSrc
+      ? iconMeta.darkIconSrc
+      : iconMeta.iconSrc;
 
   // For Express and Vercel, invert black SVG to white in dark mode
-  const needsInvert = isDark && (name === "Vercel" || name === "Express");
+  const needsInvert = !icon && isDark && (name === "Vercel" || name === "Express");
 
   const handleMouseEnter = () => {
     setIsHovered(true);

@@ -1,4 +1,5 @@
-import { Schema, model, models, type Model } from "mongoose";
+import { Schema, type Model } from "mongoose";
+import { defineModel } from "./define";
 import { LocalizedSchema, type Localized } from "./shared";
 
 export interface IStackCategory {
@@ -6,7 +7,7 @@ export interface IStackCategory {
   label: Localized;
   icon: "frontend" | "backend" | "database" | "tooling";
   order: number;
-  items: { name: string; note: Localized }[];
+  items: { name: string; note: Localized; icon?: string; iconDark?: string }[];
 }
 
 const schema = new Schema<IStackCategory>(
@@ -24,11 +25,12 @@ const schema = new Schema<IStackCategory>(
         _id: false,
         name: { type: String, required: true },
         note: { type: LocalizedSchema },
+        icon: String,
+        iconDark: String,
       },
     ],
   },
   { timestamps: true },
 );
 
-export const StackCategory: Model<IStackCategory> =
-  models.StackCategory ?? model<IStackCategory>("StackCategory", schema);
+export const StackCategory: Model<IStackCategory> = defineModel<IStackCategory>("StackCategory", schema);

@@ -1,4 +1,5 @@
-import { Schema, model, models, type Model } from "mongoose";
+import { Schema, type Model } from "mongoose";
+import { defineModel } from "./define";
 import { ROLES, type Role } from "../roles";
 
 export interface IUser {
@@ -32,4 +33,4 @@ const schema = new Schema<IUser>(
   { timestamps: true },
 );
 
-export const User: Model<IUser> = models.User ?? model<IUser>("User", schema);
+export const User: Model<IUser> = defineModel<IUser>("User", schema);

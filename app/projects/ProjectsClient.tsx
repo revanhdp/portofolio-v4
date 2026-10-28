@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import PageWrapper from "@/components/PageWrapper";
+import SketchTitle from "@/components/SketchTitle";
 import type { Project } from "@/lib/data";
 import type { CProject } from "@/lib/types";
 import { localizeProject } from "@/lib/localize";
@@ -105,7 +106,7 @@ export default function ProjectsClient({ data }: { data: CProject[] }) {
             color: "var(--foreground)",
           }}
         >
-          {t.projects.title}
+          <SketchTitle seedKey="projects">{t.projects.title}</SketchTitle>
         </h1>
         <p
           style={{ fontSize: "15px", color: "var(--muted)", marginTop: "2px" }}

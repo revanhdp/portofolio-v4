@@ -32,7 +32,7 @@ export default async function ResourceEditor({
         title: initial ? initial.label.en : "New category",
         description: "A group of tools on the stack page.",
       };
-      form = <StackForm key={id} initial={initial} />;
+      form = <StackForm key={id} initial={initial} {...media} />;
       break;
     }
     case "projects": {
@@ -43,7 +43,10 @@ export default async function ResourceEditor({
         title: initial ? initial.name : "New project",
         description: initial ? `Shown at /projects/${initial.id}` : "Gets its own page at /projects/<slug>.",
       };
-      form = <ProjectForm key={id} initial={initial} {...media} />;
+      const tools = (await getStack()).flatMap((c) =>
+        c.items.map((i) => ({ name: i.name, category: c.label.en, icon: i.icon })),
+      );
+      form = <ProjectForm key={id} initial={initial} tools={tools} {...media} />;
       break;
     }
     case "work": {

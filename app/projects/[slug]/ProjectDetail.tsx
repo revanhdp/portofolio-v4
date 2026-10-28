@@ -15,6 +15,8 @@ import { useLanguage } from "@/lib/i18n";
 
 interface Props {
   project: CProject;
+  /** Custom tool logos from the stack settings, keyed by tool name. */
+  toolIcons?: Record<string, { icon?: string; iconDark?: string }>;
 }
 
 const fadeUp = (delay = 0) => ({
@@ -40,7 +42,7 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function ProjectDetail({ project: raw }: Props) {
+export default function ProjectDetail({ project: raw, toolIcons = {} }: Props) {
   const { t, lang } = useLanguage();
   const project = localizeProject(raw, lang);
   const hasImages = (project.images?.length ?? 0) > 0;
@@ -174,7 +176,13 @@ export default function ProjectDetail({ project: raw }: Props) {
           }}
         >
           {project.stack.map((tech, index) => (
-            <TechStackItem key={tech} name={tech} index={index} />
+            <TechStackItem
+              key={tech}
+              name={tech}
+              index={index}
+              icon={toolIcons[tech]?.icon}
+              iconDark={toolIcons[tech]?.iconDark}
+            />
           ))}
         </div>
       </motion.section>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { ArrowDown, ArrowUp, ChevronDown, Plus, Trash2 } from "lucide-react";
 import type { L } from "@/lib/types";
 
@@ -289,38 +289,5 @@ export function ListEditor<T>({
         {addLabel}
       </button>
     </div>
-  );
-}
-
-/** Comma-separated tags (e.g. the tech used by a project). */
-export function Tags({
-  label,
-  value,
-  onChange,
-  hint,
-}: {
-  label: string;
-  value: string[];
-  onChange: (v: string[]) => void;
-  hint?: string;
-}) {
-  // Keep the raw text while typing so a trailing comma is not swallowed
-  const [raw, setRaw] = useState(value.join(", "));
-  return (
-    <Field label={label} hint={hint}>
-      <input
-        className="admin-input"
-        value={raw}
-        onChange={(e) => {
-          setRaw(e.target.value);
-          onChange(
-            e.target.value
-              .split(",")
-              .map((s) => s.trim())
-              .filter(Boolean),
-          );
-        }}
-      />
-    </Field>
   );
 }

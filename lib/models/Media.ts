@@ -1,4 +1,5 @@
-import { Schema, model, models, type Model } from "mongoose";
+import { Schema, type Model } from "mongoose";
+import { defineModel } from "./define";
 
 export interface IMedia {
   /** Stored file name, unique; the public URL is /uploads/<name>. */
@@ -20,5 +21,4 @@ const schema = new Schema<IMedia>(
   { timestamps: true },
 );
 
-export const Media: Model<IMedia> =
-  models.Media ?? model<IMedia>("Media", schema);
+export const Media: Model<IMedia> = defineModel<IMedia>("Media", schema);

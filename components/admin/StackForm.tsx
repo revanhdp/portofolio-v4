@@ -3,6 +3,7 @@
 import { useState } from "react";
 import EditorShell from "./EditorShell";
 import { ListEditor, Localized, Section, Select, Text } from "./fields";
+import ImagePicker from "./ImagePicker";
 import { TECH_ICONS } from "@/components/techIconsRegistry";
 import { deleteStack, saveStack } from "@/lib/admin-actions";
 import type { CStackCategory } from "@/lib/types";
@@ -22,7 +23,15 @@ const ICONS: { value: CStackCategory["icon"]; label: string }[] = [
   { value: "tooling", label: "Tooling" },
 ];
 
-export default function StackForm({ initial }: { initial?: CStackCategory }) {
+export default function StackForm({
+  initial,
+  currentUser,
+  isSuperadmin,
+}: {
+  initial?: CStackCategory;
+  currentUser: string;
+  isSuperadmin: boolean;
+}) {
   const base = initial ?? blank;
   const [doc, setDoc] = useState<CStackCategory>(base);
   const set = <K extends keyof CStackCategory>(k: K, v: CStackCategory[K]) =>
@@ -47,7 +56,7 @@ export default function StackForm({ initial }: { initial?: CStackCategory }) {
 
       <Section
         title="Tools"
-        description="Use a known name, like TypeScript or Docker, so the tool gets its logo."
+        description="Known names like TypeScript or Docker get a built-in logo. Upload an icon to replace it, or to add a tool that has none."
       >
         <datalist id="tech-names">
           {Object.keys(TECH_ICONS).map((n) => (
@@ -57,7 +66,7 @@ export default function StackForm({ initial }: { initial?: CStackCategory }) {
         <ListEditor
           items={doc.items}
           onChange={(v) => set("items", v)}
-          create={() => ({ name: "", note: { en: "", id: "" } })}
+          create={() => ({ name: "", note: { en: "", id: "" }, icon: "", iconDark: "" })}
           addLabel="Add tool"
           itemTitle={(item) => item.name || "New tool"}
         >
@@ -70,6 +79,26 @@ export default function StackForm({ initial }: { initial?: CStackCategory }) {
                 onChange={(name) => update({ ...item, name })}
               />
               <Localized label="Note" value={item.note} onChange={(note) => update({ ...item, note })} />
+              <>
+                <ImagePicker
+                  label="Icon"
+                  value={item.icon ?? ""}
+                  fallback={TECH_ICONS[item.name]?.iconSrc}
+                  hint={TECH_ICONS[item.name] ? "Empty uses the built-in logo shown here." : "Square PNG, WebP or AVIF works best."}
+                  onChange={(icon) => update({ ...item, icon })}
+                  currentUser={currentUser}
+                  isSuperadmin={isSuperadmin}
+                />
+                <ImagePicker
+                  label="Dark mode icon"
+                  value={item.iconDark ?? ""}
+                  fallback={item.icon ? undefined : TECH_ICONS[item.name]?.darkIconSrc}
+                  hint="Optional. Empty reuses the main icon."
+                  onChange={(iconDark) => update({ ...item, iconDark })}
+                  currentUser={currentUser}
+                  isSuperadmin={isSuperadmin}
+                />
+              </>
             </>
           )}
         </ListEditor>

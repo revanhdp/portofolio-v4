@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import PageWrapper from "@/components/PageWrapper";
+import SketchTitle from "@/components/SketchTitle";
 import WorkProjectRow from "@/components/WorkProjectRow";
 import CompanyBadge from "@/components/CompanyBadge";
 import type { WorkExperience } from "@/lib/data";
@@ -105,7 +106,7 @@ export default function WorkClient({ data }: { data: CWork[] }) {
             color: "var(--foreground)",
           }}
         >
-          {t.work.title}
+          <SketchTitle seedKey="work">{t.work.title}</SketchTitle>
         </h1>
         <p
           style={{

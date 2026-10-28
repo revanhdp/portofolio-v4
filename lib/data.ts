@@ -80,6 +80,10 @@ export type StackCategory = {
   items: {
     name: string;
     note: string;
+    /** Custom logo (e.g. an upload); falls back to the built-in one for this name. */
+    icon?: string;
+    /** Logo used in dark mode, when the main one does not suit it. */
+    iconDark?: string;
   }[];
 };
 

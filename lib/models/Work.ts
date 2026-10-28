@@ -1,4 +1,5 @@
-import { Schema, model, models, type Model } from "mongoose";
+import { Schema, type Model } from "mongoose";
+import { defineModel } from "./define";
 import { LocalizedSchema, type Localized } from "./shared";
 import { WORK_ICONS } from "../work-icons";
 
@@ -40,4 +41,4 @@ const schema = new Schema<IWork>(
   { timestamps: true },
 );
 
-export const Work: Model<IWork> = models.Work ?? model<IWork>("Work", schema);
+export const Work: Model<IWork> = defineModel<IWork>("Work", schema);

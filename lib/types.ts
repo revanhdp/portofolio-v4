@@ -11,7 +11,7 @@ export type CStackCategory = {
   label: L;
   icon: StackCategory["icon"];
   order: number;
-  items: { name: string; note: L }[];
+  items: { name: string; note: L; icon?: string; iconDark?: string }[];
 };
 
 export type CProject = {

@@ -1,4 +1,5 @@
-import { Schema, model, models, type Model } from "mongoose";
+import { Schema, type Model } from "mongoose";
+import { defineModel } from "./define";
 import { LocalizedSchema, type Localized } from "./shared";
 
 export interface IProject {
@@ -42,5 +43,4 @@ const schema = new Schema<IProject>(
   { timestamps: true },
 );
 
-export const Project: Model<IProject> =
-  models.Project ?? model<IProject>("Project", schema);
+export const Project: Model<IProject> = defineModel<IProject>("Project", schema);

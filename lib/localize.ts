@@ -28,7 +28,12 @@ export const localizeStack = (
     id: c.id,
     label: pick(c.label, lang),
     icon: c.icon,
-    items: c.items.map((i) => ({ name: i.name, note: pick(i.note, lang) })),
+    items: c.items.map((i) => ({
+      name: i.name,
+      note: pick(i.note, lang),
+      icon: i.icon,
+      iconDark: i.iconDark,
+    })),
   }));
 
 export const localizeProject = (p: CProject, lang: Language): Project => ({

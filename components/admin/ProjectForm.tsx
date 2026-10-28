@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { Upload } from "lucide-react";
 import EditorShell from "./EditorShell";
-import { ListEditor, Localized, Section, Switch, Tags, Text } from "./fields";
+import { ListEditor, Localized, Section, Spinner, Switch, Text, btn } from "./fields";
+import ToolPicker, { type ToolOption } from "./ToolPicker";
+import { IMAGE_ACCEPT, uploadImage } from "./upload";
 import ImagePicker from "./ImagePicker";
 import { deleteProject, saveProject } from "@/lib/admin-actions";
 import type { CProject } from "@/lib/types";
@@ -28,10 +31,13 @@ const preview = (text: string, fallback: string) =>
 
 export default function ProjectForm({
   initial,
+  tools,
   currentUser,
   isSuperadmin,
 }: {
   initial?: CProject;
+  /** Tools from the Stack module, offered in the picker. */
+  tools: ToolOption[];
   currentUser: string;
   isSuperadmin: boolean;
 }) {
@@ -39,6 +45,30 @@ export default function ProjectForm({
   const [doc, setDoc] = useState<CProject>(base);
   const set = <K extends keyof CProject>(k: K, v: CProject[K]) =>
     setDoc((d) => ({ ...d, [k]: v }));
+
+  // Drop several screenshots at once: each is stored and added with its path filled in
+  const shots = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string>();
+  const uploadShots = async (files: FileList | null) => {
+    if (!files?.length) return;
+    setUploading(true);
+    setUploadError(undefined);
+    for (const file of Array.from(files)) {
+      try {
+        const { url } = await uploadImage(file);
+        setDoc((d) => ({
+          ...d,
+          images: [...d.images, { src: url, caption: { en: "", id: "" } }],
+        }));
+      } catch (err) {
+        setUploadError(`${file.name}: ${err instanceof Error ? err.message : "Upload failed."}`);
+        break;
+      }
+    }
+    setUploading(false);
+    if (shots.current) shots.current.value = "";
+  };
 
   return (
     <EditorShell
@@ -66,7 +96,13 @@ export default function ProjectForm({
       <Section title="Description">
         <Localized label="Short description" value={doc.description} onChange={(v) => set("description", v)} rows={2} hint="Shown in the project list." />
         <Localized label="Your role" value={doc.role} onChange={(v) => set("role", v)} />
-        <Tags label="Tech used" value={doc.stack} onChange={(v) => set("stack", v)} hint="Comma separated, e.g. TypeScript, Next.js, Laravel" />
+        <ToolPicker
+          label="Tech used"
+          value={doc.stack}
+          onChange={(v) => set("stack", v)}
+          tools={tools}
+          hint="Choose from your Stack. Dashed chips are not in the Stack list yet."
+        />
       </Section>
 
       <Section title="Links">
@@ -100,7 +136,19 @@ export default function ProjectForm({
         </ListEditor>
       </Section>
 
-      <Section title="Screenshots" description="Shown as a grid; each opens full size.">
+      <Section title="Screenshots" description="Shown as a grid; each opens full size. Uploaded files are saved and their paths filled in for you.">
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <input ref={shots} type="file" multiple accept={IMAGE_ACCEPT} hidden onChange={(e) => uploadShots(e.target.files)} />
+          <button type="button" className={btn.secondary} disabled={uploading} onClick={() => shots.current?.click()}>
+            {uploading ? <Spinner /> : <Upload size={14} />}
+            {uploading ? "Uploading…" : "Upload screenshots"}
+          </button>
+          {uploadError && (
+            <span role="alert" className="admin-hint" style={{ color: "var(--a-danger)" }}>
+              {uploadError}
+            </span>
+          )}
+        </div>
         <ListEditor
           items={doc.images}
           onChange={(v) => set("images", v)}
