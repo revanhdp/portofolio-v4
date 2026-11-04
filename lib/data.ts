@@ -2,10 +2,10 @@
    Kept short and left-to-right: the greeting animates character by
    character, which breaks the contextual joining of RTL scripts.       */
 export const greetings = [
-  "Howdy",
-  "Hello",
   "Halo",
+  "Hello",
   "Hola",
+  "Howdy",
   "Salut",
   "Ciao",
   "Olá",
