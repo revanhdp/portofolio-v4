@@ -551,3 +551,87 @@ html.lenis body {
   vertical-align: -2.5px;
   object-fit: contain;
 }
+
+/* ── Timeline: period | spine | body ── */
+.tl-item {
+  display: grid;
+  grid-template-columns: 104px 18px 1fr;
+  grid-template-areas: "period spine body";
+  column-gap: 10px;
+}
+.tl-period {
+  grid-area: period;
+  padding-top: 2px;
+  font-size: 13px;
+  line-height: 24px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.tl-spine {
+  grid-area: spine;
+  position: relative;
+}
+/* the line runs from this dot down to the next one */
+.tl-spine::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 19px;
+  bottom: 0;
+  width: 1px;
+  margin-left: -0.5px;
+  background: var(--border);
+}
+.tl-item[data-last] .tl-spine::before {
+  display: none;
+}
+.tl-dot {
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  border-radius: 50%;
+  background: var(--background);
+  border: 1px solid var(--muted);
+}
+.tl-dot[data-current] {
+  background: var(--foreground);
+  border-color: var(--foreground);
+}
+.tl-body {
+  grid-area: body;
+  min-width: 0;
+  padding-bottom: 30px;
+}
+.tl-body h2 {
+  line-height: 24px;
+}
+.tl-item[data-last] .tl-body {
+  padding-bottom: 0;
+}
+@media (max-width: 520px) {
+  .tl-item {
+    grid-template-columns: 18px 1fr;
+    grid-template-areas:
+      "spine period"
+      "spine body";
+    column-gap: 8px;
+  }
+  .tl-period {
+    padding-top: 0;
+    line-height: 20px;
+    font-size: 12.5px;
+  }
+  .tl-spine::before {
+    top: 15px;
+  }
+  .tl-dot {
+    top: 6px;
+  }
+  .tl-body h2 {
+    line-height: 22px;
+  }
+}

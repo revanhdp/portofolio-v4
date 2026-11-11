@@ -4,96 +4,74 @@ import { motion } from "framer-motion";
 import PageWrapper from "@/components/PageWrapper";
 import SketchTitle from "@/components/SketchTitle";
 import WorkProjectRow from "@/components/WorkProjectRow";
-import CompanyBadge from "@/components/CompanyBadge";
 import type { WorkExperience } from "@/lib/data";
 import type { CWork } from "@/lib/types";
 import { localizeWork } from "@/lib/localize";
 import { playHover } from "@/lib/sound";
 import { useLanguage } from "@/lib/i18n";
 
-interface WorkEntryProps {
+// "2024 – Present" / "2024 – Sekarang"
+const isCurrent = (period: string) => /present|sekarang/i.test(period);
+
+/* One step on the timeline: period | spine with a dot | company, role and
+   the projects shipped there. The grid lives in globals.css (.tl-*).     */
+function WorkEntry({
+  work,
+  index,
+  last,
+  present,
+}: {
   work: WorkExperience;
-  /** Running row count, so the stagger flows across the whole page. */
-  offset: number;
-}
+  index: number;
+  last: boolean;
+  present: string;
+}) {
+  const current = isCurrent(work.period);
 
-function WorkEntry({ work, offset }: WorkEntryProps) {
   return (
-    <section style={{ marginTop: "32px" }}>
-      {/* Header — badge in the icon column, so the company name and every
-          project label below it share one text column at 36px. */}
-      <motion.div
-        initial={{ opacity: 0, y: 4 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2, delay: offset * 0.04 }}
-        onMouseEnter={playHover}
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          gap: "10px",
-          paddingBottom: "8px",
-        }}
-      >
-        <CompanyBadge company={work.company} logo={work.logo} />
+    <motion.li
+      className="tl-item"
+      data-last={last || undefined}
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, delay: index * 0.06 }}
+      onMouseEnter={playHover}
+    >
+      <span className="tl-period">
+        {current
+          ? work.period.replace(/present|sekarang/i, present)
+          : work.period}
+      </span>
 
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "baseline",
-              justifyContent: "space-between",
-              gap: "12px",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "15px",
-                fontWeight: 500,
-                color: "var(--foreground)",
-              }}
-            >
-              {work.company}
-            </h2>
-            <span
-              style={{
-                fontSize: "13px",
-                color: "var(--muted)",
-                flexShrink: 0,
-              }}
-            >
-              {work.period}
-            </span>
-          </div>
-          {/* The role — the detail the home preview leaves out */}
-          <p style={{ fontSize: "13px", color: "var(--muted)" }}>{work.role}</p>
-        </div>
-      </motion.div>
+      <span className="tl-spine" aria-hidden="true">
+        <span className="tl-dot" data-current={current || undefined} />
+      </span>
 
-      {work.projects.map((project, index) => (
-        <motion.div
-          key={project.name}
-          initial={{ opacity: 0, y: 4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2, delay: (offset + index + 1) * 0.04 }}
+      <div className="tl-body">
+        <h2
+          style={{
+            fontSize: "15px",
+            fontWeight: 500,
+            color: "var(--foreground)",
+          }}
         >
-          <WorkProjectRow project={project} divider />
-        </motion.div>
-      ))}
-    </section>
+          {work.company}
+        </h2>
+        <p style={{ fontSize: "13px", color: "var(--muted)" }}>{work.role}</p>
+
+        <div style={{ marginTop: "8px" }}>
+          {work.projects.map((project) => (
+            <WorkProjectRow key={project.name} project={project} divider />
+          ))}
+        </div>
+      </div>
+    </motion.li>
   );
 }
 
 export default function WorkClient({ data }: { data: CWork[] }) {
   const { t, lang } = useLanguage();
   const works = data.map((w) => localizeWork(w, lang));
-  // Each entry consumes one delay slot for its header plus one per project,
-  // so the stagger keeps flowing across entry boundaries.
-  const entries = works.map((work, i) => ({
-    work,
-    offset: works
-      .slice(0, i)
-      .reduce((total, prev) => total + prev.projects.length + 1, 0),
-  }));
 
   return (
     <PageWrapper showBack>
@@ -129,9 +107,17 @@ export default function WorkClient({ data }: { data: CWork[] }) {
         </p>
       </div>
 
-      {entries.map(({ work, offset }) => (
-        <WorkEntry key={work.id} work={work} offset={offset} />
-      ))}
+      <ol style={{ listStyle: "none", marginTop: "36px" }}>
+        {works.map((work, i) => (
+          <WorkEntry
+            key={work.id}
+            work={work}
+            index={i}
+            last={i === works.length - 1}
+            present={t.work.present}
+          />
+        ))}
+      </ol>
     </PageWrapper>
   );
 }

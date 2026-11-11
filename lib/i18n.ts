@@ -55,6 +55,7 @@ const en = {
       "The full account of where I've worked — the role I held, and the platforms I actually",
     introEmph: "shipped",
     introAfter: "there.",
+    present: "Present",
   },
   projects: {
     title: "Projects",
@@ -139,6 +140,7 @@ const id: Dict = {
       "Riwayat lengkap tempat saya bekerja — peran yang saya emban, dan platform yang benar-benar saya",
     introEmph: "rilis",
     introAfter: "di sana.",
+    present: "Sekarang",
   },
   projects: {
     title: "Proyek",
