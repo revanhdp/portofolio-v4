@@ -40,6 +40,7 @@ export const TECH_ICONS: Record<string, TechIconDefinition> = {
   "Framer Motion": {
     name: "Framer Motion",
     iconSrc: "/icons/tech/framermotion.svg",
+    darkIconSrc: "/icons/tech/framermotion-dark.svg",
     color: "#0055FF",
     glow: "rgba(0, 85, 255, 0.45)",
   },
@@ -89,8 +90,8 @@ export const TECH_ICONS: Record<string, TechIconDefinition> = {
   "REST API": {
     name: "REST API",
     iconSrc: "/icons/tech/restapi.svg",
-    color: "#FF6C37",
-    glow: "rgba(255, 108, 55, 0.45)",
+    color: "#0EA5E9",
+    glow: "rgba(14, 165, 233, 0.45)",
   },
   PostgreSQL: {
     name: "PostgreSQL",
@@ -107,6 +108,7 @@ export const TECH_ICONS: Record<string, TechIconDefinition> = {
   Prisma: {
     name: "Prisma",
     iconSrc: "/icons/tech/prisma.svg",
+    darkIconSrc: "/icons/tech/prisma-dark.svg",
     color: "#5A67D8",
     darkColor: "#ffffff",
     glow: "rgba(90, 103, 216, 0.45)",
@@ -148,6 +150,18 @@ export const TECH_ICONS: Record<string, TechIconDefinition> = {
     color: "#646CFF",
     glow: "rgba(100, 108, 255, 0.45)",
   },
+  Playwright: {
+    name: "Playwright",
+    iconSrc: "/icons/tech/playwright.svg",
+    color: "#2EAD33",
+    glow: "rgba(46, 173, 51, 0.45)",
+  },
+  Go: {
+    name: "Go",
+    iconSrc: "/icons/tech/go.svg",
+    color: "#00ADD8",
+    glow: "rgba(0, 173, 216, 0.45)",
+  },
   "Alpine.js": {
     name: "Alpine.js",
     color: "#0f766e",
@@ -162,18 +176,9 @@ export const TECH_ICONS: Record<string, TechIconDefinition> = {
   },
   JavaScript: {
     name: "JavaScript",
-    color: "#a16207",
-    darkColor: "#facc15",
-    glow: "rgba(250, 204, 21, 0.45)",
-    renderIcon: () => (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-        <rect width="24" height="24" rx="4" fill="#F7DF1E" />
-        <path
-          d="M7 16c.5.8 1.4 1.2 2.4 1.2 1.5 0 2.4-.8 2.4-2.4V8h-2.1v6.7c0 .6-.3.9-.8.9-.5 0-.8-.3-1.1-.7L7 16zm7.8-1.2c.7.9 1.7 1.4 2.8 1.4 1.6 0 2.5-.8 2.5-1.9 0-1.1-.8-1.6-2.2-2.1-1.6-.6-2.6-1.2-2.6-2.6 0-1.5 1.2-2.7 3-2.7 1.3 0 2.3.5 3 1.4l-.8 1.5c-.5-.6-1.3-.9-2.1-.9-.8 0-1.4.4-1.4 1.1 0 .7.6 1.1 1.8 1.6 1.9.7 3 1.4 3 2.8 0 1.7-1.3 2.8-3.3 2.8-1.7 0-2.8-.7-3.6-1.8l.9-1.4z"
-          fill="#000000"
-        />
-      </svg>
-    ),
+    iconSrc: "/icons/tech/javascript.svg",
+    color: "#F7DF1E",
+    glow: "rgba(247, 223, 30, 0.45)",
   },
   GraphQL: {
     name: "GraphQL",
@@ -325,7 +330,7 @@ export const TECH_ICONS: Record<string, TechIconDefinition> = {
 
 export const defaultTechIcon: TechIconDefinition = {
   name: "Code",
-  iconSrc: "/icons/tech/typescript.svg",
+  iconSrc: "/icons/tech/generic.svg",
   color: "#71717a",
   glow: "rgba(113, 113, 122, 0.3)",
 };

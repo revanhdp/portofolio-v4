@@ -148,19 +148,6 @@ export const works: WorkExperience[] = [
       },
     ],
   },
-  {
-    id: "freelance",
-    company: "Freelance",
-    period: "2022 – 2023",
-    role: "Web Developer",
-    projects: [
-      {
-        icon: "globe",
-        name: "Client Web Platforms",
-        description: "Custom websites and web applications for local clients",
-      },
-    ],
-  },
 ];
 
 export const stack: StackCategory[] = [
@@ -184,7 +171,6 @@ export const stack: StackCategory[] = [
     items: [
       { name: "Node.js", note: "Services & API layers" },
       { name: "NestJS", note: "Enterprise TypeScript architecture" },
-      { name: "Laravel", note: "PHP apps & enterprise portals" },
       { name: "Express", note: "Lightweight REST routing" },
       { name: "REST API", note: "Contract-first design" },
     ],
@@ -207,7 +193,6 @@ export const stack: StackCategory[] = [
     items: [
       { name: "Git", note: "Trunk-based workflow" },
       { name: "Docker", note: "Reproducible environments" },
-      { name: "Vercel", note: "Preview & production deploys" },
       { name: "Figma", note: "Design handoff" },
     ],
   },
@@ -496,7 +481,7 @@ export const projects: Project[] = [
       "eManifest digitises the passenger and cargo manifest process for Indonesian sea transport, replacing paper submissions with a single portal that operators, port officers, and the ministry all work from.",
       "The hard part is not the forms — it is that a manifest passes through several parties before it is final, and every one of them needs to see the same state without stepping on each other.",
     ],
-    stack: ["TypeScript", "Next.js", "Laravel", "PostgreSQL", "Tailwind CSS"],
+    stack: ["TypeScript", "Next.js", "PostgreSQL", "Tailwind CSS"],
     highlights: [
       "Manifest submission and verification flow shared by operators and port officers",
       "Role-based access across ministry, port, and operator accounts",
@@ -524,7 +509,7 @@ export const projects: Project[] = [
       "eKompu is the public communications bureau portal for the Ministry of Public Works and Housing — the place its press releases, media requests, and public information services are published and managed from.",
       "It carries a lot of editorial content, so most of the work went into making the publishing side quick to use and the public side quick to load.",
     ],
-    stack: ["Laravel", "MySQL", "Tailwind CSS", "Alpine.js"],
+    stack: ["MySQL", "Tailwind CSS", "Alpine.js"],
     highlights: [
       "Editorial workflow for press releases and public information requests",
       "Media library shared across the bureau's publishing channels",
@@ -541,7 +526,7 @@ export const projects: Project[] = [
       "PKP HUB brings housing and settlement data for the Ministry of Housing and Settlement Areas into one portal, so programme data that used to live in separate spreadsheets and regional systems can be read in a single place.",
       "Most of the design effort was in the data model: the same programme is reported differently by different regions, and the portal has to reconcile that without losing the detail.",
     ],
-    stack: ["TypeScript", "Next.js", "Laravel", "PostgreSQL"],
+    stack: ["TypeScript", "Next.js", "PostgreSQL"],
     highlights: [
       "Unified programme data across regional housing offices",
       "Dashboard views for programme progress by region and period",
